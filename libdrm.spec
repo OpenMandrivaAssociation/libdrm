@@ -1,104 +1,98 @@
-%define libdrm %mklibname drm 2
-Name: libdrm
-Summary: Userspace interface to kernel DRM services
-Version: 2.3.0
-Release: %mkrel 2
-Group: Development/X11
-License: MIT/X11
-URL: http://xorg.freedesktop.org
-Source0: http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
-# (fc) do not change permission if not requested
-Patch0: libdrm-2.3.0-perm.patch
-BuildRoot: %{_tmppath}/%{name}-root
+%define major 2
+%define libname %mklibname drm %{major}
+%define develname %mklibname drm -d
+%define staticdevelname %mklibname drm -d -s
 
-BuildRequires: x11-util-macros >= 1.0.1
+Summary:	Userspace interface to kernel DRM services
+Name:		libdrm
+Version:	2.3.0
+Release:	%mkrel 3
+Group:		Development/X11
+License:	MIT/X11
+URL:		http://xorg.freedesktop.org
+Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
+# (fc) do not change permission if not requested
+Patch0:		libdrm-2.3.0-perm.patch
+BuildRequires:	x11-util-macros >= 1.0.1
+BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
 Userspace interface to kernel DRM services
 
-#-----------------------------------------------------------
-%package -n %{libdrm}
-Summary: Userspace interface to kernel DRM services
-Group: Development/X11
-Provides: %{name} = %{version}
+%package -n	%{libname}
+Summary:	Userspace interface to kernel DRM services
+Group:		Development/X11
+Provides:	%{name} = %{version}
 
-%description -n %{libdrm}
+%description -n	%{libname}
 Userspace interface to kernel DRM services
 
-#-----------------------------------------------------------
+%package -n	%{develname}
+Summary:	Development files for %{name}
+Group:		Development/X11
+Requires:	%{name} >= %{version}
+Requires:	%{libname} = %{version}
+%if "%{_lib}" != "lib"
+Provides:       %{name}-devel = %{version}-%{release}
+%endif
+Provides:       %{mklibname drm 2 -d} = %{version}
+Obsoletes:      %{mklibname drm 2 -d}
 
-%package -n %{libdrm}-devel
-Summary: Development files for %{name}
-Group: Development/X11
-Provides: libdrm-devel = %{version}-%{release}
-Requires: %{name} >= %{version}
-
-%description -n %{libdrm}-devel
+%description -n	%{develname}
 Development files for %{name}
 
-%files -n %{libdrm}-devel
-%defattr(-,root,root)
-%dir %{_includedir}/drm
-%{_includedir}/drm/drm.h
-%{_includedir}/drm/drm_sarea.h
-%{_includedir}/drm/i915_drm.h
-%{_includedir}/drm/mach64_drm.h
-%{_includedir}/drm/mga_drm.h
-%{_includedir}/drm/r128_drm.h
-%{_includedir}/drm/r300_reg.h
-%{_includedir}/drm/radeon_drm.h
-%{_includedir}/drm/savage_drm.h
-%{_includedir}/drm/sis_drm.h
-%{_includedir}/drm/via_3d_reg.h
-%{_includedir}/drm/via_drm.h
-%{_includedir}/xf86drm.h
-%{_includedir}/xf86mm.h
-%{_libdir}/libdrm.la
-%{_libdir}/libdrm.so
-%{_libdir}/pkgconfig/libdrm.pc
- 
-#-----------------------------------------------------------
+%package -n	%{staticdevelname}
+Summary:	Static development files for %{name}
+Group:		Development/X11
+Requires:	%{name}-devel >= %{version}
+Requires:	%{libname} = %{version}
+%if "%{_lib}" != "lib"
+Provides:       %{name}-static-devel = %{version}-%{release}
+%endif
+Provides:       %{mklibname drm 2 -d -s} = %{version}
+Obsoletes:      %{mklibname drm 2 -d -s}
 
-%package -n %{libdrm}-static-devel
-Summary: Static development files for %{name}
-Group: Development/X11
-Requires: %{name}-devel >= %{version}
-Provides: libdrm-static-devel = %{version}-%{release}
-
-%description -n %{libdrm}-static-devel
+%description -n	%{staticdevelname}
 Static development files for %{name}
 
-%files -n %{libdrm}-static-devel
-%defattr(-,root,root)
-%{_libdir}/libdrm.a
-
-#-----------------------------------------------------------
-
 %prep
+
 %setup -q -n libdrm-%{version}
 %patch0 -p1 -b .perm
 
 %build
-%configure2_5x	--x-includes=%{_includedir}\
-		--x-libraries=%{_libdir} \
-		--enable-static
+%configure2_5x \
+    --x-includes=%{_includedir} \
+    --x-libraries=%{_libdir} \
+    --enable-static
 
 %make
 
 %install
 rm -rf %{buildroot}
+
 %makeinstall_std 
+
+%post -n %{libname} -p /sbin/ldconfig
+
+%postun -n %{libname} -p /sbin/ldconfig
 
 %clean
 rm -rf %{buildroot}
 
-%post -n %{libdrm} -p /sbin/ldconfig
-
-%postun -n %{libdrm} -p /sbin/ldconfig
-
-%files -n %{libdrm}
+%files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/libdrm.so.2
-%{_libdir}/libdrm.so.2.*
+%{_libdir}/*.so.*
 
+%files -n %{develname}
+%defattr(-,root,root)
+%dir %{_includedir}/drm
+%{_includedir}/drm/*.h
+%{_includedir}/*.h
+%{_libdir}/*.la
+%{_libdir}/*.so
+%{_libdir}/pkgconfig/*.pc
 
+%files -n %{staticdevelname}
+%defattr(-,root,root)
+%{_libdir}/*.a
