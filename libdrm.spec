@@ -15,6 +15,7 @@ Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Patch0:		libdrm-2.3.0-perm.patch
 Patch1:		libdrm-visibility.patch
 BuildRequires:	x11-util-macros >= 1.0.1
+BuildRequires:	x11-proto-devel
 BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
