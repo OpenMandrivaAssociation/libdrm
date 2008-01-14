@@ -6,7 +6,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.3.0
-Release:	%mkrel 6
+Release:	%mkrel 7
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -14,8 +14,8 @@ Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 # (fc) do not change permission if not requested
 Patch0:		libdrm-2.3.0-perm.patch
 Patch1:		libdrm-visibility.patch
-BuildRequires:	x11-util-macros >= 1.0.1
-BuildRequires:	x11-proto-devel
+BuildRequires:	x11-util-macros		>= 1.1.5
+BuildRequires:	x11-proto-devel		>= 7.3
 BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
@@ -55,7 +55,6 @@ Static development files for %{name}
 
 %setup -q -n libdrm-%{version}
 %patch0 -p1 -b .perm
-%patch1 -p1 -b .visibility
 
 %build
 %configure2_5x \
