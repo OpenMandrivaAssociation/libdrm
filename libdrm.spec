@@ -13,9 +13,7 @@ URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 # (fc) do not change permission if not requested
 Patch0:		libdrm-2.3.0-perm.patch
-Patch1:		libdrm-visibility.patch
-BuildRequires:	x11-util-macros		>= 1.1.5
-BuildRequires:	x11-proto-devel		>= 7.3
+BuildRequires: x11-util-macros >= 1.0.1
 BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
