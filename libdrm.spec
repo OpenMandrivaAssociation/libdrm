@@ -5,8 +5,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.3.0
-Release:	%mkrel 8
+Version:	2.3.1
+Release:	%mkrel 1
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
