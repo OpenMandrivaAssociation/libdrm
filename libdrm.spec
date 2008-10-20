@@ -14,6 +14,7 @@ Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 # (fc) do not change permission if not requested
 Patch0:		libdrm-2.3.0-perm.patch
 BuildRequires: x11-util-macros >= 1.0.1
+BuildRequires: libpthread-stubs
 BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
