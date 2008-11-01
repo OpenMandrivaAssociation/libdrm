@@ -5,15 +5,14 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.0
-Release:	%mkrel 2
+Version:	2.4.1
+Release:	%mkrel 1
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 # (fc) do not change permission if not requested
 Patch0:		libdrm-2.3.0-perm.patch
-Patch1: 0001-intel-avoid-deadlock-in-intel_bufmgr_fake.patch
 BuildRequires: x11-util-macros >= 1.0.1
 BuildRequires: libpthread-stubs
 BuildRoot:	%{_tmppath}/%{name}-root
@@ -53,14 +52,11 @@ Static development files for %{name}
 
 %prep
 
-%setup -q -n libdrm-%{version}
+%setup -q
 %patch0 -p1 -b .perm
-%patch1 -p1
 
 %build
 %configure2_5x \
-    --x-includes=%{_includedir} \
-    --x-libraries=%{_libdir} \
     --enable-static
 
 %make
