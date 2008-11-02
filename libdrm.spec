@@ -6,14 +6,13 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.1
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 # (fc) do not change permission if not requested
 Patch0:		libdrm-2.3.0-perm.patch
-Patch1: 0001-Revert-intel-Rename-dri_-and-intel_-symbols-to-drm.patch
 BuildRequires: x11-util-macros >= 1.0.1
 BuildRequires: libpthread-stubs
 BuildRoot:	%{_tmppath}/%{name}-root
@@ -55,7 +54,6 @@ Static development files for %{name}
 
 %setup -q
 %patch0 -p1 -b .perm
-%patch1 -p1
 
 %build
 %configure2_5x \
