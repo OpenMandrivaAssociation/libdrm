@@ -6,7 +6,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.1
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -67,6 +67,13 @@ rm -rf %{buildroot}
 
 %makeinstall_std 
 
+# Remove files provided by kernel-headers
+for hdr in drm.h drm_sarea.h i915_drm.h mga_drm.h r128_drm.h radeon_drm.h \
+           savage_drm.h sis_drm.h via_drm.h;
+do
+	rm -f %{buildroot}%{_includedir}/drm/$hdr
+done
+
 %if %mdkversion < 200900
 %post -n %{libname} -p /sbin/ldconfig
 %endif
@@ -84,7 +91,6 @@ rm -rf %{buildroot}
 
 %files -n %{develname}
 %defattr(-,root,root)
-%dir %{_includedir}/drm
 %{_includedir}/drm/*.h
 %{_includedir}/*.h
 %{_libdir}/*.la
