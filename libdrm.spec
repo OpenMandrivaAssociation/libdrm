@@ -6,7 +6,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.1
-Release:	%mkrel 8
+Release:	%mkrel 9
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -16,6 +16,7 @@ Patch0:		libdrm-2.3.0-perm.patch
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
 BuildRequires:	x11-util-macros >= 1.0.1
+Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 BuildRoot:	%{_tmppath}/%{name}-root
 
 %description
