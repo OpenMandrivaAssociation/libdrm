@@ -6,7 +6,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.3
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -30,7 +30,6 @@ Userspace interface to kernel DRM services
 %package common
 Summary:	Common files for the userspace interface to kernel DRM services
 Group:		Development/X11
-Provides:	%{name} = %{version}
 
 %description common
 Common files for the userspace interface to kernel DRM services
