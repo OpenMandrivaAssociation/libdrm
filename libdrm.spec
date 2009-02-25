@@ -5,8 +5,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.4
-Release:	%mkrel 2
+Version:	2.4.5
+Release:	%mkrel 1
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -16,9 +16,7 @@ Source2: i915modeset
 
 Patch0001:  0001-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0002:  0002-RH-libdrm-2.4.0-no-bc-v1.3.patch
-Patch0003:  0003-RH-libdrm-radeon-v1.3.patch
-
-Patch1001:  libdrm-fence-management-support.patch
+Patch0003:  0003-RH-libdrm-radeon-v1.7.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
@@ -73,8 +71,6 @@ Static development files for %{name}
 %patch0001 -p1
 %patch0002 -p1
 %patch0003 -p1
-
-%patch1001 -p1
 
 %build
 # (cg) Needed for radeon stuff
