@@ -6,7 +6,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.5
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		Development/X11
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -61,6 +61,7 @@ Requires:	%{name}-devel >= %{version}
 Requires:	%{libname} = %{version}
 Provides:       %{name}-static-devel = %{version}-%{release}
 Obsoletes:      %{mklibname drm 2 -d -s}
+Obsoletes:	drm-nouveau-devel < 2.3.0-2.20090111.2
 
 %description -n	%{staticdevelname}
 Static development files for %{name}
@@ -113,7 +114,7 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/*.so.*
+%{_libdir}/*.so.%{major}*
 
 %files -n %{develname}
 %defattr(-,root,root)
