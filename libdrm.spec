@@ -3,11 +3,16 @@
 %define develname %mklibname drm -d
 %define staticdevelname %mklibname drm -d -s
 
+%define intel_major 1
+%define libintel %mklibname drm_intel %{intel_major}
+%define radeon_major 1
+%define libradeon %mklibname drm_radeon %{radeon_major}
+
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.5
 Release:	%mkrel 2
-Group:		Development/X11
+Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
@@ -29,19 +34,35 @@ Userspace interface to kernel DRM services
 
 %package common
 Summary:	Common files for the userspace interface to kernel DRM services
-Group:		Development/X11
+Group:		System/Libraries
 
 %description common
 Common files for the userspace interface to kernel DRM services
 
 %package -n	%{libname}
 Summary:	Userspace interface to kernel DRM services
-Group:		Development/X11
+Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires: %{name}-common
 
 %description -n	%{libname}
 Userspace interface to kernel DRM services
+
+%package -n	%{libintel}
+Summary:	Shared library for Intel kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libintel}
+Shared library for Intel kernel Direct Rendering Manager services.
+
+%package -n	%{libradeon}
+Summary:	Shared library for Radeon kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libradeon}
+Shared library for Radeon kernel Direct Rendering Manager services.
 
 %package -n	%{develname}
 Summary:	Development files for %{name}
@@ -113,14 +134,22 @@ rm -rf %{buildroot}
 
 %files -n %{libname}
 %defattr(-,root,root)
-%{_libdir}/*.so.%{major}*
+%{_libdir}/libdrm.so.%{major}*
+
+%files -n %{libintel}
+%defattr(-,root,root)
+%{_libdir}/libdrm_intel.so.%{intel_major}*
+
+%files -n %{libradeon}
+%defattr(-,root,root)
+%{_libdir}/libdrm_radeon.so.%{radeon_major}*
 
 %files -n %{develname}
 %defattr(-,root,root)
-%{_includedir}/drm/*.h
+%{_includedir}/drm
 %{_includedir}/*.h
-%{_libdir}/*.so
-%{_libdir}/pkgconfig/*.pc
+%{_libdir}/libdrm*.so
+%{_libdir}/pkgconfig/libdrm*.pc
 
 %files -n %{staticdevelname}
 %defattr(-,root,root)
