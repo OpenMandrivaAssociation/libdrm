@@ -46,7 +46,6 @@ Userspace interface to kernel DRM services
 %package -n	%{develname}
 Summary:	Development files for %{name}
 Group:		Development/X11
-Requires:	%{name} >= %{version}
 Requires:	%{libname} = %{version}
 Provides:       %{name}-devel = %{version}-%{release}
 Obsoletes:      %{mklibname drm 2 -d}
