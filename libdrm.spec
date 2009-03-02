@@ -11,7 +11,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.5
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -68,6 +68,8 @@ Shared library for Radeon kernel Direct Rendering Manager services.
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
+Requires:	%{libintel} = %{version}
+Requires:	%{libradeon} = %{version}
 Provides:       %{name}-devel = %{version}-%{release}
 Obsoletes:      %{mklibname drm 2 -d}
 
