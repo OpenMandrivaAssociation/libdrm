@@ -5,13 +5,15 @@
 
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
+%define nouveau_major 1
+%define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.5
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -22,6 +24,7 @@ Source2: i915modeset
 Patch0001:  0001-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0002:  0002-RH-libdrm-2.4.0-no-bc-v1.3.patch
 Patch0003:  0003-RH-libdrm-radeon-v1.7.patch
+Patch4:		libdrm-missing-nouveau-headers.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
@@ -56,6 +59,13 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
 
+%package -n	%{libnouveau}
+Summary:	Shared library for Nouveau kernel DRM services
+Group:		System/Libraries
+
+%description -n %{libnouveau}
+Shared library for Nouveau kernel Direct Rendering Manager services.
+
 %package -n	%{libradeon}
 Summary:	Shared library for Radeon kernel DRM services
 Group:		System/Libraries
@@ -69,6 +79,7 @@ Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
 Requires:	%{libintel} = %{version}
+Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
 Provides:       %{name}-devel = %{version}-%{release}
 Obsoletes:      %{mklibname drm 2 -d}
@@ -94,13 +105,16 @@ Static development files for %{name}
 %patch0001 -p1
 %patch0002 -p1
 %patch0003 -p1
+%patch4 -p1
 
 %build
 # (cg) Needed for radeon stuff
+# and patch4
 autoreconf -v --install || exit 1
 %configure2_5x \
     --enable-udev \
-    --enable-static
+    --enable-static \
+    --enable-nouveau-experimental-api
 
 %make
 
@@ -142,6 +156,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/libdrm_intel.so.%{intel_major}*
 
+%files -n %{libnouveau}
+%defattr(-,root,root)
+%{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
+
 %files -n %{libradeon}
 %defattr(-,root,root)
 %{_libdir}/libdrm_radeon.so.%{radeon_major}*
@@ -149,6 +167,7 @@ rm -rf %{buildroot}
 %files -n %{develname}
 %defattr(-,root,root)
 %{_includedir}/drm
+%{_includedir}/nouveau
 %{_includedir}/*.h
 %{_libdir}/libdrm*.so
 %{_libdir}/pkgconfig/libdrm*.pc
