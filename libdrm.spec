@@ -19,7 +19,6 @@ License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
-Source2: i915modeset
 
 Patch0001:  0001-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0002:  0002-RH-libdrm-2.4.0-no-bc-v1.3.patch
