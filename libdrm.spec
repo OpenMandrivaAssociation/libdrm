@@ -123,8 +123,6 @@ rm -rf %{buildroot}
 %makeinstall_std 
 mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 install -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/udev/rules.d/
-mkdir -p %{buildroot}%{_sysconfdir}/modprobe.d/
-install -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/modprobe.d/
 
 find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 
@@ -145,7 +143,6 @@ rm -rf %{buildroot}
 %files common
 %defattr(-,root,root)
 %{_sysconfdir}/udev/rules.d/91-drm-modeset.rules
-%{_sysconfdir}/modprobe.d/i915modeset
 
 %files -n %{libname}
 %defattr(-,root,root)
