@@ -13,7 +13,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.5
-Release:	%mkrel 6
+Release:	%mkrel 7
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -106,7 +106,7 @@ Static development files for %{name}
 %patch0002 -p1
 %patch0003 -p1
 %patch4 -p1
-%patch5 -p1
+#patch5 -p1
 
 %build
 # (cg) Needed for radeon stuff
