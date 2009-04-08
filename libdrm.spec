@@ -13,7 +13,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.5
-Release:	%mkrel 5
+Release:	%mkrel 6
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -24,6 +24,7 @@ Patch0001:  0001-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0002:  0002-RH-libdrm-2.4.0-no-bc-v1.3.patch
 Patch0003:  0003-RH-libdrm-radeon-v1.7.patch
 Patch4:		libdrm-missing-nouveau-headers.patch
+Patch5:		0001-improve-waiting-for-dri-device-to-appear-when-system.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
@@ -105,6 +106,7 @@ Static development files for %{name}
 %patch0002 -p1
 %patch0003 -p1
 %patch4 -p1
+%patch5 -p1
 
 %build
 # (cg) Needed for radeon stuff
