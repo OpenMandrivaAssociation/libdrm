@@ -83,6 +83,7 @@ Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
 Provides:       %{name}-devel = %{version}-%{release}
 Obsoletes:      %{mklibname drm 2 -d}
+Obsoletes:	drm-nouveau-devel < 2.3.0-2.20090111.2
 
 %description -n	%{develname}
 Development files for %{name}
@@ -94,7 +95,6 @@ Requires:	%{name}-devel >= %{version}
 Requires:	%{libname} = %{version}
 Provides:       %{name}-static-devel = %{version}-%{release}
 Obsoletes:      %{mklibname drm 2 -d -s}
-Obsoletes:	drm-nouveau-devel < 2.3.0-2.20090111.2
 
 %description -n	%{staticdevelname}
 Static development files for %{name}
