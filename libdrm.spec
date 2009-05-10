@@ -105,14 +105,7 @@ Static development files for %{name}
 %prep
 
 %setup -q
-%patch0001 -p1
-%patch0002 -p1
-
-%patch0100 -p1
-%patch0101 -p1
-%patch0102 -p1
-
-%patch0500 -p1
+%apply_patches
 
 %build
 # (cg) Needed for radeon stuff
