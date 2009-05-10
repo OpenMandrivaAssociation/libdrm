@@ -13,17 +13,21 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.9
-Release:	%mkrel 2
+Release:	%mkrel 3
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
 
-Patch0001:  0001-RH-libdrm-make-dri-perms-okay-v1.1.patch
-Patch0002:  0002-RH-libdrm-2.4.0-no-bc-v1.3.patch
-Patch0003:  0003-RH-libdrm-radeon-v1.7.patch
-Patch0004:  0004-improve-waiting-for-dri-device-to-appear-when-system.patch
+Patch0001: 0001-intel-NULL-fake-bo-block-when-freeing-in-evict_all.patch
+Patch0002: 0002-libdrm-intel-assert-that-clients-are-using-bo-refco.patch
+
+Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
+Patch0101:  0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
+Patch0102:  0102-RH-libdrm-radeon-v1.7.patch
+
+Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
@@ -103,8 +107,12 @@ Static development files for %{name}
 %setup -q
 %patch0001 -p1
 %patch0002 -p1
-%patch0003 -p1
-%patch0004 -p1
+
+%patch0100 -p1
+%patch0101 -p1
+%patch0102 -p1
+
+%patch0500 -p1
 
 %build
 # (cg) Needed for radeon stuff
