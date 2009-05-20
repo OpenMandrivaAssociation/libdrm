@@ -12,16 +12,13 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.9
-Release:	%mkrel 3
+Version:	2.4.11
+Release:	%mkrel 1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
-
-Patch0001: 0001-intel-NULL-fake-bo-block-when-freeing-in-evict_all.patch
-Patch0002: 0002-libdrm-intel-assert-that-clients-are-using-bo-refco.patch
 
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0101:  0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
@@ -32,6 +29,7 @@ Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
 BuildRequires:	x11-util-macros >= 1.0.1
+BuildRequires: udev-devel
 Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 BuildRoot:	%{_tmppath}/%{name}-root
 
