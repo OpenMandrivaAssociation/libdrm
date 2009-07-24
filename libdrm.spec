@@ -12,7 +12,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.11
+Version:	2.4.12
 Release:	%mkrel 1
 Group:		System/Libraries
 License:	MIT/X11
@@ -20,9 +20,10 @@ URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
 
+Patch0:		libdrm-intel-underlinking.patch
+
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0101:  0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
-Patch0102:  0102-RH-libdrm-radeon-v1.7.patch
 
 Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 
@@ -106,13 +107,13 @@ Static development files for %{name}
 %apply_patches
 
 %build
-# (cg) Needed for radeon stuff
-# and patch4
-autoreconf -v --install || exit 1
+# Needed for patch4
+autoreconf -fv --install
 %configure2_5x \
     --enable-udev \
     --enable-static \
-    --enable-nouveau-experimental-api
+    --enable-nouveau-experimental-api \
+    --enable-radeon-experimental-api
 
 %make
 
