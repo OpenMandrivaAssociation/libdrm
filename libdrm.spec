@@ -12,17 +12,13 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.12
-Release:	%mkrel 2
+Version:	2.4.13
+Release:	%mkrel 1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
-
-Patch0:		libdrm-intel-underlinking.patch
-# git diff libdrm-2.4.12...master libdrm/nouveau shared-core/{nv,nouveau}*
-Patch1:		drm-nouveau-git-20090802.patch
 
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0101:  0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
