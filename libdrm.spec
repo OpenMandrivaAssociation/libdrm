@@ -21,6 +21,7 @@ Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
 
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
+# Do not try proc for backward Linux compatibility:
 Patch0101:  0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
 
 Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
