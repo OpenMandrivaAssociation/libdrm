@@ -13,7 +13,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.17
-Release:	%mkrel 3
+Release:	%mkrel 4
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -34,10 +34,17 @@ Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 Patch1005:     libdrm_mips_drm_cas.patch
 Patch1006:     libdrm_mips_sarea_max.patch
 
+# nouveau commits from upstream
 Patch2001:	0001-nouveau-Update-nouveau_class.h-with-new-renouveau.xm.patch
 Patch2002:	0002-nouveau-Update-some-object-definitions-from-renouvea.patch
 Patch2003:	0003-nouveau-Unreference-pushbuf-objects-on-channel-destr.patch
 Patch2004:	0004-nouveau-add-BEGIN_RING_NI.patch
+Patch2005:	0005-nouveau-Update-nouveau_class.h.patch
+Patch2006:	0006-nouveau-fix-memory-leak-in-nouveau_channel_free.patch
+Patch2007:	0007-nouveau-disable-flush_notify-on-channel_free.patch
+Patch2008:	0008-nouveau-fail-channel-creation-if-pushbuf-init-fails.patch
+Patch2009:	0009-nouveau-add-nouveau_resource_destroy.patch
+Patch2010:	0010-nouveau-Regenerate-nouveau_class.h.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
