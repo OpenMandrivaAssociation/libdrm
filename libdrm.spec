@@ -13,7 +13,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.17
-Release:	%mkrel 4
+Release:	%mkrel 5
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -24,6 +24,9 @@ Source1: 91-drm-modeset.rules
 # 050 and 051 are from fd.o bug #25912 (reported on irc)
 Patch0050: 0050-retry-getsources-if-hotplug.patch
 Patch0051: 0051-retry-getconnector-if-hotplug.patch
+# 052 should prevent gpu hangups
+Patch0052: 0052-handle-resetting-of-input-params.patch
+
 
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 # Do not try proc for backward Linux compatibility:
