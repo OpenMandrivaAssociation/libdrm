@@ -12,22 +12,13 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.17
-Release:	%mkrel 6
+Version:	2.4.18
+Release:	%mkrel 1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
-
-# Patches from upstream:
-# 050 and 051 are from fd.o bug #25912 (reported on irc)
-Patch0050: 0050-retry-getsources-if-hotplug.patch
-Patch0051: 0051-retry-getconnector-if-hotplug.patch
-# 052 should prevent gpu hangups
-Patch0052: 0052-handle-resetting-of-input-params.patch
-# 053 prevents oops and hangs
-Patch0053: 0053-intel-account-for-potential-pinned-buffers.patch
 
 
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
@@ -39,17 +30,11 @@ Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 Patch1005:     libdrm_mips_drm_cas.patch
 Patch1006:     libdrm_mips_sarea_max.patch
 
-# nouveau commits from upstream
-Patch2001:	0001-nouveau-Update-nouveau_class.h-with-new-renouveau.xm.patch
-Patch2002:	0002-nouveau-Update-some-object-definitions-from-renouvea.patch
-Patch2003:	0003-nouveau-Unreference-pushbuf-objects-on-channel-destr.patch
-Patch2004:	0004-nouveau-add-BEGIN_RING_NI.patch
-Patch2005:	0005-nouveau-Update-nouveau_class.h.patch
-Patch2006:	0006-nouveau-fix-memory-leak-in-nouveau_channel_free.patch
-Patch2007:	0007-nouveau-disable-flush_notify-on-channel_free.patch
-Patch2008:	0008-nouveau-fail-channel-creation-if-pushbuf-init-fails.patch
-Patch2009:	0009-nouveau-add-nouveau_resource_destroy.patch
-Patch2010:	0010-nouveau-Regenerate-nouveau_class.h.patch
+# Temporarily revert nouveau patches that break the abi
+# Leave this here until we backport some kernel patches
+# Talk to herton, pzanoni or anssi before changing this
+Patch2001: nouveau-revert-bump-max-push-to-512.patch
+Patch2002: nouveau-revert-interface-changes-for-0-0-16-drm.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
