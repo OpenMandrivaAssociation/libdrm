@@ -3,6 +3,8 @@
 %define develname %mklibname drm -d
 %define staticdevelname %mklibname drm -d -s
 
+%define kms_major 1
+%define libkms %mklibname kms %{kms_major}
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
 %define nouveau_major 1
@@ -34,7 +36,10 @@ Patch1006:     libdrm_mips_sarea_max.patch
 # Leave this here until we backport some kernel patches
 # Talk to herton, pzanoni or anssi before changing this
 Patch2001: nouveau-revert-bump-max-push-to-512.patch
+# (cg) I had to remove the removal of nouveau/nouveau_reloc.c as it seems to have been removed already in 2.4.19
 Patch2002: nouveau-revert-interface-changes-for-0-0-16-drm.patch
+
+Patch3000: libdrm-2.4.19-fix-linking.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
@@ -61,6 +66,13 @@ Requires: %{name}-common
 
 %description -n	%{libname}
 Userspace interface to kernel DRM services
+
+%package -n %{libkms}
+Summary:  Shared library for KMS
+Group:    System/Libraries
+
+%description -n %{libkms}
+Shared library for kernel mode setting.
 
 %package -n	%{libintel}
 Summary:	Shared library for Intel kernel DRM services
@@ -157,6 +169,10 @@ rm -rf %{buildroot}
 %defattr(-,root,root)
 %{_libdir}/libdrm.so.%{major}*
 
+%files -n %{libkms}
+%defattr(-,root,root)
+%{_libdir}/libkms.so.%{kms_major}*
+
 %files -n %{libintel}
 %defattr(-,root,root)
 %{_libdir}/libdrm_intel.so.%{intel_major}*
@@ -172,10 +188,13 @@ rm -rf %{buildroot}
 %files -n %{develname}
 %defattr(-,root,root)
 %{_includedir}/drm
+%{_includedir}/libkms
 %{_includedir}/nouveau
 %{_includedir}/*.h
 %{_libdir}/libdrm*.so
+%{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
+%{_libdir}/pkgconfig/libkms*.pc
 
 %files -n %{staticdevelname}
 %defattr(-,root,root)
