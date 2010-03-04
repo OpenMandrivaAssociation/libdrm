@@ -101,6 +101,7 @@ Shared library for Radeon kernel Direct Rendering Manager services.
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
+Requires:	%{libkms} = %{version}
 Requires:	%{libintel} = %{version}
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
