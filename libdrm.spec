@@ -15,7 +15,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.19
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -32,12 +32,10 @@ Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 Patch1005:     libdrm_mips_drm_cas.patch
 Patch1006:     libdrm_mips_sarea_max.patch
 
-# Temporarily revert nouveau patches that break the abi
-# Leave this here until we backport some kernel patches
-# Talk to herton, pzanoni or anssi before changing this
-Patch2001: nouveau-revert-bump-max-push-to-512.patch
-# (cg) I had to remove the removal of nouveau/nouveau_reloc.c as it seems to have been removed already in 2.4.19
-Patch2002: nouveau-revert-interface-changes-for-0-0-16-drm.patch
+# Nouveau fixes from git:
+Patch2001: 0001-nouveau-Update-nouveau_class.h.patch
+Patch2002: 0002-nouveau-Small-lighting-related-addition-to-nouveau_c.patch
+Patch2003: 0003-nouveau-Fix-up-the-stride-of-NV20TCL_LIGHT_BACK_.patch
 
 Patch3000: libdrm-2.4.19-fix-linking.patch
 
