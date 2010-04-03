@@ -14,8 +14,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.19
-Release:	%mkrel 3
+Version:	2.4.20
+Release:	%mkrel 1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -32,22 +32,7 @@ Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 Patch1005:     libdrm_mips_drm_cas.patch
 Patch1006:     libdrm_mips_sarea_max.patch
 
-# Nouveau fixes from git:
-Patch2001: 0001-nouveau-Update-nouveau_class.h.patch
-Patch2002: 0002-nouveau-Small-lighting-related-addition-to-nouveau_c.patch
-Patch2003: 0003-nouveau-Fix-up-the-stride-of-NV20TCL_LIGHT_BACK_.patch
-Patch2006: 0006-nouveau-Regenerate-nouveau_class.h.patch
-Patch2007: 0007-nouveau-remove-unused-field-from-nouveau_bo.patch
-Patch2008: 0008-nouveau-fix-segfault-in-nouveau_bo_new_tile-failure-.patch
-Patch2009: 0009-nouveau-fix-annoying-compiler-warning.patch
-
 Patch3000: libdrm-2.4.19-fix-linking.patch
-
-# Intel fixes from git:
-Patch4001: 0001-intel-Propagate-some-more-error-returns.patch
-Patch4002: 0002-intel-Only-align-Y-tiling-pitch-to-the-Y-tile-width.patch
-Patch4003: 0003-intel-Repeat-execbuffer-if-interrupted-by-signal.patch
-Patch4005: 0005-intel-Align-untiled-buffer-pitch-to-64B.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
@@ -142,8 +127,7 @@ autoreconf -fv --install
 %configure2_5x \
     --enable-udev \
     --enable-static \
-    --enable-nouveau-experimental-api \
-    --enable-radeon-experimental-api
+    --enable-nouveau-experimental-api
 
 %make
 
@@ -196,7 +180,7 @@ rm -rf %{buildroot}
 
 %files -n %{develname}
 %defattr(-,root,root)
-%{_includedir}/drm
+%{_includedir}/libdrm
 %{_includedir}/libkms
 %{_includedir}/nouveau
 %{_includedir}/*.h
