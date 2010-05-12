@@ -15,13 +15,15 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.20
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
 
+# Backports from git:
+Patch0001: 0001-intel-use-correct-size-when-allocating.patch
 
 Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 # Do not try proc for backward Linux compatibility:
