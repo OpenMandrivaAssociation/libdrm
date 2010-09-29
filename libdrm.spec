@@ -14,8 +14,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.21
-Release:	%mkrel 2
+Version:	2.4.22
+Release:	%mkrel 1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -29,7 +29,6 @@ Patch0100:  0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 Patch0101:  0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
 
 Patch0500:  0500-improve-waiting-for-dri-device-to-appear-when-system.patch
-Patch0501:  0501-Copy-headers-from-kernel-drm-core-next.patch
 
 Patch1005:     libdrm_mips_drm_cas.patch
 Patch1006:     libdrm_mips_sarea_max.patch
