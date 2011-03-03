@@ -15,12 +15,15 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.24
-Release:	%mkrel 1
+Release:	%mkrel 2
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1: 91-drm-modeset.rules
+
+# Revert nouveau api so mesa 7.10.1 can build:
+Patch0050: 0050-revert-nouveau-split-pushbuf-macros.patch
 
 # Backports from git:
 
