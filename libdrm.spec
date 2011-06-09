@@ -42,6 +42,7 @@ BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	libpthread-stubs
 BuildRequires:	x11-util-macros >= 1.0.1
 BuildRequires: udev-devel
+BuildRequires: libpciaccess-devel
 Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 BuildRoot:	%{_tmppath}/%{name}-root
 
