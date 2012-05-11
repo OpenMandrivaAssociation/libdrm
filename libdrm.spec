@@ -4,8 +4,10 @@
 
 %define kms_major 1
 %define libkms %mklibname kms %{kms_major}
+%ifarch %{ix86} x86_64
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
+%endif
 %define nouveau_major 1
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
@@ -14,7 +16,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.33
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -58,7 +60,7 @@ Common files for the userspace interface to kernel DRM services
 Summary:	Userspace interface to kernel DRM services
 Group:		System/Libraries
 Provides:	%{name} = %{version}
-Requires: %{name}-common
+Requires:	%{name}-common
 
 %description -n	%{libname}
 Userspace interface to kernel DRM services
@@ -70,6 +72,7 @@ Group:    System/Libraries
 %description -n %{libkms}
 Shared library for kernel mode setting.
 
+%ifarch %{ix86} x86_64
 %package -n	%{libintel}
 Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
@@ -77,6 +80,7 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
+%endif
 
 %package -n	%{libnouveau}
 Summary:	Shared library for Nouveau kernel DRM services
@@ -98,7 +102,9 @@ Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
 Requires:	%{libkms} = %{version}
+%ifarch %{ix86} x86_64
 Requires:	%{libintel} = %{version}
+%endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
 Provides:	%{name}-devel = %{version}-%{release}
@@ -118,6 +124,9 @@ Development files for %{name}
 autoreconf -fv --install
 %configure2_5x \
     --enable-udev \
+%ifnarch %{ix86} x86_64
+    --disable-intel \
+%endif
     --enable-nouveau-experimental-api
 
 %make
@@ -143,8 +152,10 @@ find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 %files -n %{libkms}
 %{_libdir}/libkms.so.%{kms_major}*
 
+%ifarch %{ix86} x86_64
 %files -n %{libintel}
 %{_libdir}/libdrm_intel.so.%{intel_major}*
+%endif
 
 %files -n %{libnouveau}
 %{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
