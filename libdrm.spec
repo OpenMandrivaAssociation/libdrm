@@ -8,15 +8,15 @@
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
 %endif
-%define nouveau_major 1
+%define nouveau_major 2
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.33
-Release:	2
+Version:	2.4.35
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -166,7 +166,6 @@ find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 %files -n %{develname}
 %{_includedir}/libdrm
 %{_includedir}/libkms
-%{_includedir}/nouveau
 %{_includedir}/*.h
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
