@@ -8,15 +8,15 @@
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
 %endif
-%define nouveau_major 1
+%define nouveau_major 2
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.37
-Release:	2
+Version:	2.4.39
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -34,7 +34,6 @@ Patch0901: 0901-Revert-nouveau-fix-channel-closing.patch
 Patch0902: 0902-Revert-nouveau-expose-notifier-handle-on-nvc0-as-wel.patch
 Patch0903: 0903-Revert-nouveau-remove-unnecessary-EAGAIN-loops.patch
 Patch0904: 0904-Revert-nouveau-init-nvc0-channel-alloc-req-structure.patch
-Patch0905: 0905-Revert-nouveau-pull-in-major-libdrm-rewrite.patch
 
 
 
@@ -177,7 +176,6 @@ find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 %{_includedir}/libdrm
 %{_includedir}/libkms
 %{_includedir}/*.h
-%{_includedir}/nouveau
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
