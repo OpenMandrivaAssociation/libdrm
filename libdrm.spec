@@ -49,10 +49,10 @@ Patch1006:	libdrm_mips_sarea_max.patch
 Patch3000:	libdrm-2.4.19-fix-linking.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
-BuildRequires:	libpthread-stubs
+BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	x11-util-macros >= 1.0.1
-BuildRequires:	udev-devel
-BuildRequires:	libpciaccess-devel
+BuildRequires:	pkgconfig(udev)
+BuildRequires:	pkgconfig(pciaccess)
 Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 
 %description
