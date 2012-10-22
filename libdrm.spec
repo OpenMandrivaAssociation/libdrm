@@ -13,10 +13,12 @@
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
 
+%bcond_without	uclibc
+
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.39
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -53,6 +55,9 @@ BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	x11-util-macros >= 1.0.1
 BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
+%if %{with uclibc}
+BuildRequires:	uClibc-devel
+%endif
 Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 
 %description
@@ -122,7 +127,7 @@ Obsoletes:	%{_lib}drm-static-devel
 Obsoletes:	drm-nouveau-devel < 2.3.0-2.20090111.2
 
 %description -n	%{develname}
-Development files for %{name}
+Development files for %{name}.
 
 %prep
 %setup -q
@@ -131,19 +136,40 @@ Development files for %{name}
 autoreconf -fv --install
 
 %build
-%configure2_5x \
-    --enable-udev \
+export CONFIGURE_TOP="$PWD"
+%if %{with uclibc}
+mkdir -p uclibc
+pushd uclibc
+%uclibc_configure \
+		--disable-shared \
+		--enable-static \
+		--disable-silent-rules \
+		--enable-udev \
 %ifnarch %{ix86} x86_64
-    --disable-intel \
+		--disable-intel \
 %endif
-    --enable-nouveau-experimental-api
+		--enable-nouveau-experimental-api
+%make
+popd
+%endif
 
+mkdir -p system
+pushd system
+%configure2_5x	--enable-udev \
+%ifnarch %{ix86} x86_64
+		--disable-intel \
+%endif
+		--enable-nouveau-experimental-api
 %make
 
 %install
-%makeinstall_std 
-mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
-install -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/udev/rules.d/
+%if %{with uclibc}
+%makeinstall_std -C uclibc
+rm -r %{buildroot}%{uclibc_root}%{_libdir}/pkgconfig
+%endif
+%makeinstall_std -C system
+
+install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/udev/rules.d/91-drm-modeset.rules
 
 # (cg) Note that RH remove drm.h drm_mode.h drm_sarea.h r300_reg.h via_3d_reg.h
 # and we should perhaps do the same? (previous attempts have not gone well :)
@@ -176,3 +202,6 @@ install -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/udev/rules.d/
 %{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/lib*.a
+%endif
