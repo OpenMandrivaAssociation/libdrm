@@ -127,10 +127,10 @@ Development files for %{name}
 %prep
 %setup -q
 %apply_patches
-
-%build
 # Needed for patch4
 autoreconf -fv --install
+
+%build
 %configure2_5x \
     --enable-udev \
 %ifnarch %{ix86} x86_64
