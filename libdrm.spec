@@ -29,40 +29,40 @@ Source1:	91-drm-modeset.rules
 # Backports from git:
 
 # (from mageia) Revert nouveau merge to allow mesa build.
-Patch0900: 0900-Revert-nouveau-silence-some-remaining-valgrind-warni.patch
-Patch0901: 0901-Revert-nouveau-fix-channel-closing.patch
-Patch0902: 0902-Revert-nouveau-expose-notifier-handle-on-nvc0-as-wel.patch
-Patch0903: 0903-Revert-nouveau-remove-unnecessary-EAGAIN-loops.patch
-Patch0904: 0904-Revert-nouveau-init-nvc0-channel-alloc-req-structure.patch
+Patch0900:	0900-Revert-nouveau-silence-some-remaining-valgrind-warni.patch
+Patch0901:	0901-Revert-nouveau-fix-channel-closing.patch
+Patch0902:	0902-Revert-nouveau-expose-notifier-handle-on-nvc0-as-wel.patch
+Patch0903:	0903-Revert-nouveau-remove-unnecessary-EAGAIN-loops.patch
+Patch0904:	0904-Revert-nouveau-init-nvc0-channel-alloc-req-structure.patch
 
 
 
-Patch0100: 0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
+Patch0100:	0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 # Do not try proc for backward Linux compatibility:
-Patch0101: 0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
+Patch0101:	0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
 
-Patch0500: 0500-improve-waiting-for-dri-device-to-appear-when-system.patch
+Patch0500:	0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 
-Patch1005: libdrm_mips_drm_cas.patch
-Patch1006: libdrm_mips_sarea_max.patch
+Patch1005:	libdrm_mips_drm_cas.patch
+Patch1006:	libdrm_mips_sarea_max.patch
 
-Patch3000: libdrm-2.4.19-fix-linking.patch
+Patch3000:	libdrm-2.4.19-fix-linking.patch
 
-BuildRequires: kernel-headers >= 1:2.6.27.4-3mnb2
-BuildRequires: libpthread-stubs
-BuildRequires: x11-util-macros >= 1.0.1
-BuildRequires: udev-devel
-BuildRequires: libpciaccess-devel
+BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
+BuildRequires:	libpthread-stubs
+BuildRequires:	x11-util-macros >= 1.0.1
+BuildRequires:	udev-devel
+BuildRequires:	libpciaccess-devel
 Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 
 %description
 Userspace interface to kernel DRM services
 
-%package common
+%package	common
 Summary:	Common files for the userspace interface to kernel DRM services
 Group:		System/Libraries
 
-%description common
+%description	common
 Common files for the userspace interface to kernel DRM services
 
 %package -n	%{libname}
@@ -74,11 +74,11 @@ Requires:	%{name}-common
 %description -n	%{libname}
 Userspace interface to kernel DRM services
 
-%package -n %{libkms}
-Summary:  Shared library for KMS
-Group:    System/Libraries
+%package -n	%{libkms}
+Summary:	Shared library for KMS
+Group:		System/Libraries
 
-%description -n %{libkms}
+%description -n	%{libkms}
 Shared library for kernel mode setting.
 
 %ifarch %{ix86} x86_64
@@ -87,7 +87,7 @@ Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
 
-%description -n %{libintel}
+%description -n	%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
 %endif
 
@@ -95,7 +95,7 @@ Shared library for Intel kernel Direct Rendering Manager services.
 Summary:	Shared library for Nouveau kernel DRM services
 Group:		System/Libraries
 
-%description -n %{libnouveau}
+%description -n	%{libnouveau}
 Shared library for Nouveau kernel Direct Rendering Manager services.
 
 %package -n	%{libradeon}
@@ -141,13 +141,9 @@ autoreconf -fv --install
 %make
 
 %install
-rm -rf %{buildroot}
-
 %makeinstall_std 
 mkdir -p %{buildroot}%{_sysconfdir}/udev/rules.d/
 install -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/udev/rules.d/
-
-find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 
 # (cg) Note that RH remove drm.h drm_mode.h drm_sarea.h r300_reg.h via_3d_reg.h
 # and we should perhaps do the same? (previous attempts have not gone well :)
@@ -180,4 +176,3 @@ find %{buildroot} -type f -name '*.la' -exec rm -f {} \;
 %{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-
