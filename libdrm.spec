@@ -76,7 +76,12 @@ Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires:	%{name}-common
 
-%description -n	%{libname}
+%package -n	uclibc-%{libname}
+Summary:	Userspace interface to kernel DRM services (uClibc build)
+Group:		System/Libraries
+Requires:	%{name}-common
+
+%description -n	uclibc-%{libname}
 Userspace interface to kernel DRM services
 
 %package -n	%{libkms}
@@ -84,6 +89,13 @@ Summary:	Shared library for KMS
 Group:		System/Libraries
 
 %description -n	%{libkms}
+Shared library for kernel mode setting.
+
+%package -n	uclibc-%{libkms}
+Summary:	Shared library for KMS (uClibc build)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libkms}
 Shared library for kernel mode setting.
 
 %ifarch %{ix86} x86_64
@@ -94,6 +106,13 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n	%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
+
+%package -n	uclibc-%{libintel}
+Summary:	Shared library for Intel kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libintel}
+Shared library for Intel kernel Direct Rendering Manager services.
 %endif
 
 %package -n	%{libnouveau}
@@ -103,12 +122,26 @@ Group:		System/Libraries
 %description -n	%{libnouveau}
 Shared library for Nouveau kernel Direct Rendering Manager services.
 
+%package -n	uclibc-%{libnouveau}
+Summary:	Shared library for Nouveau kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n	uclibc-%{libnouveau}
+Shared library for Nouveau kernel Direct Rendering Manager services.
+
 %package -n	%{libradeon}
 Summary:	Shared library for Radeon kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libradeon}
+Shared library for Radeon kernel Direct Rendering Manager services.
+
+%package -n	uclibc-%{libradeon}
+Summary:	Shared library for Radeon kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n uclibc-%{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
 %package -n	%{develname}
@@ -121,6 +154,17 @@ Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
+
+%if %{with uclibc}
+Requires:	uclibc-%{libname} = %{version}
+Requires:	uclibc-%{libkms} = %{version}
+%ifarch %{ix86} x86_64
+Requires:	uclibc-%{libintel} = %{version}
+%endif
+Requires:	uclibc-%{libnouveau} = %{version}
+Requires:	uclibc-%{libradeon} = %{version}
+%endif
+
 Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{_lib}drm2-devel
 Obsoletes:	%{_lib}drm-static-devel
@@ -141,9 +185,8 @@ export CONFIGURE_TOP="$PWD"
 mkdir -p uclibc
 pushd uclibc
 %uclibc_configure \
-		--disable-shared \
-		--enable-static \
-		--disable-silent-rules \
+		--enable-shared \
+		--disable-static \
 		--enable-udev \
 %ifnarch %{ix86} x86_64
 		--disable-intel \
@@ -180,19 +223,44 @@ install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/udev/rules.d/91-drm-modes
 %files -n %{libname}
 %{_libdir}/libdrm.so.%{major}*
 
+%if %{with uclibc}
+%files -n uclibc-%{libname}
+%{uclibc_root}%{_libdir}/libdrm.so.%{major}*
+%endif
+
 %files -n %{libkms}
 %{_libdir}/libkms.so.%{kms_major}*
+
+%if %{with uclibc}
+%files -n uclibc-%{libkms}
+%{uclibc_root}%{_libdir}/libkms.so.%{kms_major}*
+%endif
 
 %ifarch %{ix86} x86_64
 %files -n %{libintel}
 %{_libdir}/libdrm_intel.so.%{intel_major}*
+
+%if %{with uclibc}
+%files -n uclibc-%{libintel}
+%{uclibc_root}%{_libdir}/libdrm_intel.so.%{intel_major}*
+%endif
 %endif
 
 %files -n %{libnouveau}
 %{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
 
+%if %{with uclibc}
+%files -n uclibc-%{libnouveau}
+%{uclibc_root}%{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
+%endif
+
 %files -n %{libradeon}
 %{_libdir}/libdrm_radeon.so.%{radeon_major}*
+
+%if %{with uclibc}
+%files -n uclibc-%{libradeon}
+%{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
+%endif
 
 %files -n %{develname}
 %{_includedir}/libdrm
@@ -200,8 +268,9 @@ install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/udev/rules.d/91-drm-modes
 %{_includedir}/*.h
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
+%if %{with uclibc}
+%{uclibc_root}%{_libdir}/libdrm*.so
+%{uclibc_root}%{_libdir}/libkms.so
+%endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/lib*.a
-%endif
