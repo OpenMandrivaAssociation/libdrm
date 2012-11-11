@@ -1,0 +1,39 @@
+From 22e180011cddd0fab14ff98bb30a96e4c9fcb465 Mon Sep 17 00:00:00 2001
+From: Colin Guthrie <colin@mageia.org>
+Date: Sat, 30 Jun 2012 17:56:44 +0100
+Subject: [PATCH 902/905] Revert "nouveau: expose notifier handle on nvc0 as
+ well"
+
+This reverts commit 754655c795fff1c6267d358e54ad5198aee0cdd6.
+---
+ nouveau/abi16.c   | 1 -
+ nouveau/nouveau.h | 1 -
+ 2 files changed, 2 deletions(-)
+
+diff --git a/nouveau/abi16.c b/nouveau/abi16.c
+index 69a0a9b..0fa575c 100644
+--- a/nouveau/abi16.c
++++ b/nouveau/abi16.c
+@@ -66,7 +66,6 @@ abi16_chan_nvc0(struct nouveau_object *obj)
+ 
+ 	nvc0->base.channel = req.channel;
+ 	nvc0->base.pushbuf = req.pushbuf_domains;
+-	nvc0->notify = req.notifier_handle;
+ 	nvc0->base.object->handle = req.channel;
+ 	nvc0->base.object->length = sizeof(*nvc0);
+ 	return 0;
+diff --git a/nouveau/nouveau.h b/nouveau/nouveau.h
+index 51a9598..d7954cf 100644
+--- a/nouveau/nouveau.h
++++ b/nouveau/nouveau.h
+@@ -38,7 +38,6 @@ struct nv04_fifo {
+ 
+ struct nvc0_fifo {
+ 	struct nouveau_fifo base;
+-	uint32_t notify;
+ };
+ 
+ struct nv04_notify {
+-- 
+1.7.11
+

@@ -1,0 +1,25 @@
+From bbcf98636e9d9e64cb2171ffaaf559ec0c660871 Mon Sep 17 00:00:00 2001
+From: Colin Guthrie <cguthrie@mandriva.org>
+Date: Tue, 23 Dec 2008 19:47:39 +0000
+Subject: [PATCH 100/102] RH: libdrm-make-dri-perms-okay v1.1
+
+---
+ xf86drm.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/xf86drm.h b/libdrm/xf86drm.h
+index c1d173c..94a7ba5 100644
+--- a/xf86drm.h
++++ b/xf86drm.h
+@@ -45,7 +45,7 @@
+ /* Default /dev/dri directory permissions 0755 */
+ #define DRM_DEV_DIRMODE	 	\
+ 	(S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IXGRP|S_IROTH|S_IXOTH)
+-#define DRM_DEV_MODE	 (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP)
++#define DRM_DEV_MODE	 (S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH)
+ 
+ #define DRM_DIR_NAME  "/dev/dri"
+ #define DRM_DEV_NAME  "%s/card%d"
+-- 
+1.6.2.4
+

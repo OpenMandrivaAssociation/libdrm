@@ -1,0 +1,67 @@
+From acfcb54b1cefbd65ccd42d83460b58ac4fefd58a Mon Sep 17 00:00:00 2001
+From: Colin Guthrie <cguthrie@mandriva.org>
+Date: Tue, 23 Dec 2008 19:49:06 +0000
+Subject: [PATCH 101/102] RH: libdrm-2.4.0-no-bc v1.3
+
+---
+ xf86drm.c |   37 -------------------------------------
+ 1 files changed, 0 insertions(+), 37 deletions(-)
+
+diff --git a/xf86drm.c b/libdrm/xf86drm.c
+index 55df19a..7672ea5 100644
+--- a/xf86drm.c
++++ b/xf86drm.c
+@@ -422,11 +422,6 @@ int drmAvailable(void)
+     int           fd;
+ 
+     if ((fd = drmOpenMinor(0, 1, DRM_NODE_RENDER)) < 0) {
+-#ifdef __linux__
+-	/* Try proc for backward Linux compatibility */
+-	if (!access("/proc/dri/0", R_OK))
+-	    return 1;
+-#endif
+ 	return 0;
+     }
+     
+@@ -545,38 +540,6 @@ static int drmOpenByName(const char *name)
+ 	}
+     }
+ 
+-#ifdef __linux__
+-    /* Backward-compatibility /proc support */
+-    for (i = 0; i < 8; i++) {
+-	char proc_name[64], buf[512];
+-	char *driver, *pt, *devstring;
+-	int  retcode;
+-	
+-	sprintf(proc_name, "/proc/dri/%d/name", i);
+-	if ((fd = open(proc_name, 0, 0)) >= 0) {
+-	    retcode = read(fd, buf, sizeof(buf)-1);
+-	    close(fd);
+-	    if (retcode) {
+-		buf[retcode-1] = '\0';
+-		for (driver = pt = buf; *pt && *pt != ' '; ++pt)
+-		    ;
+-		if (*pt) { /* Device is next */
+-		    *pt = '\0';
+-		    if (!strcmp(driver, name)) { /* Match */
+-			for (devstring = ++pt; *pt && *pt != ' '; ++pt)
+-			    ;
+-			if (*pt) { /* Found busid */
+-			    return drmOpenByBusid(++pt);
+-			} else { /* No busid */
+-			    return drmOpenDevice(strtol(devstring, NULL, 0),i, DRM_NODE_RENDER);
+-			}
+-		    }
+-		}
+-	    }
+-	}
+-    }
+-#endif
+-
+     return -1;
+ }
+ 
+-- 
+1.6.2.4
+

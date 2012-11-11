@@ -1,0 +1,34 @@
+Path: news.gmane.org!not-for-mail
+From: Arkadiusz Miskiewicz <arekm@maven.pl>
+Newsgroups: gmane.comp.freedesktop.xorg,gmane.comp.video.dri.devel
+Subject: Re: [ANNOUNCE] libdrm 2.4.19
+Date: Wed, 3 Mar 2010 21:30:58 +0100
+Lines: 20
+Approved: news@gmane.org
+Message-ID: <201003032130.59222.arekm@maven.pl>
+References: <87vdddjjvb.fsf@pollan.anholt.net>
+	<201003032127.00260.arekm@maven.pl>
+
+On Wednesday 03 of March 2010, Arkadiusz Miskiewicz wrote:
+> > On Wednesday 03 of March 2010, Eric Anholt wrote:
+>> > > New version for new Intel API that we're about to start using in Mesa.
+> > 
+> > Unresolved symbols found in: /home/users/arekm/tmp/libdrm-2.4.19-root-
+> > arekm/usr/lib64/libkms.so.1.0.0
+> >         drmIoctl
+> >         drmCommandWriteRead
+> >         drmCommandWrite
+> > 
+> > Lack of linking with libdrm it seems.
+--- libdrm-2.4.19/libkms/Makefile.am~ 2010-03-02 19:10:47.000000000 +0100
++++ libdrm-2.4.19/libkms/Makefile.am  2010-03-03 21:28:13.629525972 +0100
+@@ -5,7 +5,7 @@
+ libkms_la_LTLIBRARIES = libkms.la
+ libkms_ladir = $(libdir)
+ libkms_la_LDFLAGS = -version-number 1:0:0 -no-undefined
+-libkms_la_LIBADD =
++libkms_la_LIBADD = $(top_builddir)/libdrm.la
+ 
+ #if HAVE_LIBUDEV
+ #libkms_la_LIBADD += $(LIBUDEV_LIBS)
+

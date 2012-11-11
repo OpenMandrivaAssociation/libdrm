@@ -1,0 +1,51 @@
+From c7504446ce6504a395556d7445c43ecac20600fd Mon Sep 17 00:00:00 2001
+From: Colin Guthrie <colin@mageia.org>
+Date: Sat, 30 Jun 2012 17:56:46 +0100
+Subject: [PATCH 903/905] Revert "nouveau: remove unnecessary EAGAIN loops"
+
+This reverts commit d954648b4872e6b40ec8768a14eee818bc7613a8.
+---
+ nouveau/nouveau.c | 8 ++++++--
+ nouveau/pushbuf.c | 7 +++++--
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/nouveau/nouveau.c b/nouveau/nouveau.c
+index f0bc2c3..699b9b7 100644
+--- a/nouveau/nouveau.c
++++ b/nouveau/nouveau.c
+@@ -461,8 +461,12 @@ nouveau_bo_wait(struct nouveau_bo *bo, uint32_t access,
+ 	if (access & NOUVEAU_BO_NOBLOCK)
+ 		req.flags |= NOUVEAU_GEM_CPU_PREP_NOWAIT;
+ 
+-	ret = drmCommandWrite(bo->device->fd, DRM_NOUVEAU_GEM_CPU_PREP,
+-			      &req, sizeof(req));
++	do {
++		ret = drmCommandWrite(bo->device->fd,
++				      DRM_NOUVEAU_GEM_CPU_PREP,
++				      &req, sizeof(req));
++	} while (ret == -EAGAIN);
++
+ 	if (ret == 0)
+ 		nvbo->access = 0;
+ 	return ret;
+diff --git a/nouveau/pushbuf.c b/nouveau/pushbuf.c
+index 7b9dbaa..103737e 100644
+--- a/nouveau/pushbuf.c
++++ b/nouveau/pushbuf.c
+@@ -341,8 +341,11 @@ pushbuf_submit(struct nouveau_pushbuf *push, struct nouveau_object *chan)
+ 			pushbuf_dump(krec, krec_id++, fifo->channel);
+ 
+ #ifndef SIMULATE
+-		ret = drmCommandWriteRead(dev->fd, DRM_NOUVEAU_GEM_PUSHBUF,
+-					  &req, sizeof(req));
++		do {
++			ret = drmCommandWriteRead(dev->fd,
++						  DRM_NOUVEAU_GEM_PUSHBUF,
++						  &req, sizeof(req));
++		} while (ret == -EAGAIN);
+ 		nvpb->suffix0 = req.suffix0;
+ 		nvpb->suffix1 = req.suffix1;
+ 		dev->vram_limit = (req.vram_available * 80) / 100;
+-- 
+1.7.11
+
