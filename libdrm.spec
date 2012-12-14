@@ -48,8 +48,6 @@ Patch0500:	0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 Patch1005:	libdrm_mips_drm_cas.patch
 Patch1006:	libdrm_mips_sarea_max.patch
 
-Patch3000:	libdrm-2.4.19-fix-linking.patch
-
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	x11-util-macros >= 1.0.1
