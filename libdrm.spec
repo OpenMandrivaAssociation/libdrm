@@ -272,3 +272,4 @@ install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/udev/rules.d/91-drm-modes
 %endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
+%{_mandir}/man3/*
