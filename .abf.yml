@@ -1,3 +1,2 @@
 sources:
-  "91-drm-modeset.rules:"	0f655ebccb1ff837171090d6db4de05a658ec97e
-  "libdrm-2.4.39.tar.bz2:"	c0e841850d7164c63d36f486ca3a64040357660e
+  libdrm-2.4.40.tar.bz2: 0f77aa49922e17102caa75de86c8e79bbf23b4a1
