@@ -17,8 +17,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.40
-Release:	2
+Version:	2.4.41
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -30,18 +30,11 @@ Source1:	91-drm-modeset.rules
 
 # Backports from git:
 
-# (from mageia) Revert nouveau merge to allow mesa build.
-Patch0900:	0900-Revert-nouveau-silence-some-remaining-valgrind-warni.patch
-Patch0901:	0901-Revert-nouveau-fix-channel-closing.patch
-Patch0902:	0902-Revert-nouveau-expose-notifier-handle-on-nvc0-as-wel.patch
-Patch0903:	0903-Revert-nouveau-remove-unnecessary-EAGAIN-loops.patch
-Patch0904:	0904-Revert-nouveau-init-nvc0-channel-alloc-req-structure.patch
-
-
-
 Patch0100:	0100-RH-libdrm-make-dri-perms-okay-v1.1.patch
 # Do not try proc for backward Linux compatibility:
 Patch0101:	0101-RH-libdrm-2.4.0-no-bc-v1.3.patch
+
+Patch0200:	libdrm-2.4.41-autoconf.patch
 
 Patch0500:	0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 
@@ -272,4 +265,3 @@ install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/udev/rules.d/91-drm-modes
 %endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-%{_mandir}/man3/*
