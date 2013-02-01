@@ -203,13 +203,13 @@ rm -r %{buildroot}%{uclibc_root}%{_libdir}/pkgconfig
 %endif
 %makeinstall_std -C system
 
-install -m644 %{SOURCE1} -D %{buildroot}%{_sysconfdir}/udev/rules.d/91-drm-modeset.rules
+install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 # (cg) Note that RH remove drm.h drm_mode.h drm_sarea.h r300_reg.h via_3d_reg.h
 # and we should perhaps do the same? (previous attempts have not gone well :)
 
 %files common
-%{_sysconfdir}/udev/rules.d/91-drm-modeset.rules
+/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libname}
 %{_libdir}/libdrm.so.%{major}*
