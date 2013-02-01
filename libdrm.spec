@@ -18,7 +18,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.41
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
