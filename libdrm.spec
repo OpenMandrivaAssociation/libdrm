@@ -52,6 +52,10 @@ BuildRequires:	uClibc-devel
 %endif
 Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
 
+# For building man pages
+BuildRequires:	xsltproc
+BuildRequires:	docbook-style-xsl
+
 %description
 Userspace interface to kernel DRM services
 
