@@ -17,8 +17,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.41
-Release:	2
+Version:	2.4.42
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 URL:		http://xorg.freedesktop.org
@@ -40,6 +40,7 @@ Patch0500:	0500-improve-waiting-for-dri-device-to-appear-when-system.patch
 
 Patch1005:	libdrm_mips_drm_cas.patch
 Patch1006:	libdrm_mips_sarea_max.patch
+Patch1007:	libdrm-2.4.42-fix-man-build.patch
 
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	pkgconfig(pthread-stubs)
@@ -164,6 +165,13 @@ Obsoletes:	drm-nouveau-devel < 2.3.0-2.20090111.2
 %description -n	%{develname}
 Development files for %{name}.
 
+%track
+prog %name = {
+	url = http://dri.freedesktop.org/libdrm/
+	regex = %name-(__VER__)\.tar\.bz2
+	version = %version
+}
+
 %prep
 %setup -q
 %apply_patches
@@ -178,6 +186,7 @@ pushd uclibc
 %uclibc_configure \
 		--enable-shared \
 		--disable-static \
+		--disable-manpages \
 		--enable-udev \
 %ifnarch %{ix86} x86_64
 		--disable-intel \
@@ -265,3 +274,5 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
+%_mandir/man3/*
+%_mandir/man7/*
