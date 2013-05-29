@@ -1,6 +1,6 @@
 %define major 2
 %define libname %mklibname drm %{major}
-%define develname %mklibname drm -d
+%define devname %mklibname drm -d
 
 %define kms_major 1
 %define libkms %mklibname kms %{kms_major}
@@ -32,13 +32,9 @@ Version:	2.4.44
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
-URL:		http://xorg.freedesktop.org
+Url:		http://xorg.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1:	91-drm-modeset.rules
-
-# Revert nouveau api so mesa 7.10.1 can build:
-# Patch0050: 0050-revert-nouveau-split-pushbuf-macros.patch
-
 # Backports from git:
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
@@ -49,20 +45,17 @@ Patch5:		libdrm-2.4.25-check-programs.patch
 # add qxl header
 Patch6:		0001-qxl-add-header-file.patch
 
-
+# For building man pages
+BuildRequires:	docbook-style-xsl
+BuildRequires:	xsltproc
 BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
 BuildRequires:	pkgconfig(pthread-stubs)
-BuildRequires:	x11-util-macros >= 1.0.1
 BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
+BuildRequires:	pkgconfig(xorg-macros)
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 %endif
-Conflicts:	kernel-headers <= 1:2.6.27.4-2mnb2
-
-# For building man pages
-BuildRequires:	xsltproc
-BuildRequires:	docbook-style-xsl
 
 %description
 Userspace interface to kernel DRM services
@@ -106,7 +99,6 @@ Shared library for kernel mode setting.
 %package -n	%{libintel}
 Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
-Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n	%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
@@ -173,7 +165,6 @@ Shared library for Exynos kernel Direct Rendering Manager services.
 %package -n	%{libfreedreno}
 Summary:	Shared library for Adreno kernel DRM services
 Group:		System/Libraries
-Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libfreedreno}
 Shared library for Adreno kernel Direct Rendering Manager services.
@@ -204,7 +195,7 @@ Group:		System/Libraries
 Shared library for OMAP kernel Direct Rendering Manager services.
 %endif
 
-%package -n	%{develname}
+%package -n	%{devname}
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
@@ -231,18 +222,16 @@ Requires:	uclibc-%{libradeon} = %{version}
 %endif
 
 Provides:	%{name}-devel = %{version}-%{release}
-Obsoletes:	%{_lib}drm2-devel
 Obsoletes:	%{_lib}drm-static-devel
-Obsoletes:	drm-nouveau-devel < 2.3.0-2.20090111.2
 
-%description -n	%{develname}
+%description -n	%{devname}
 Development files for %{name}.
 
 %track
-prog %name = {
+prog %{name} = {
 	url = http://dri.freedesktop.org/libdrm/
-	regex = %name-(__VER__)\.tar\.bz2
-	version = %version
+	regex = %{name}-(__VER__)\.tar\.bz2
+	version = %{version}
 }
 
 %prep
@@ -257,35 +246,36 @@ export CONFIGURE_TOP="$PWD"
 mkdir -p uclibc
 pushd uclibc
 %uclibc_configure \
-		--enable-shared \
-		--disable-static \
-		--disable-manpages \
-		--enable-udev \
+	--enable-shared \
+	--disable-static \
+	--disable-manpages \
+	--enable-udev \
 %ifnarch %{ix86} x86_64
-		--disable-intel \
+	--disable-intel \
 %endif
 %ifarch %{arm}
-		--enable-exynos-experimental-api \
-		--enable-freedreno-experimental-api \
-		--enable-omap-experimental-api \
+	--enable-exynos-experimental-api \
+	--enable-freedreno-experimental-api \
+	--enable-omap-experimental-api \
 %endif
-		--enable-nouveau-experimental-api
+	--enable-nouveau-experimental-api
 %make
 popd
 %endif
 
 mkdir -p system
 pushd system
-%configure2_5x	--enable-udev \
+%configure2_5x \
+	--enable-udev \
 %ifnarch %{ix86} x86_64
-		--disable-intel \
+	--disable-intel \
 %endif
 %ifarch %{arm}
-		--enable-exynos-experimental-api \
-		--enable-freedreno-experimental-api \
-		--enable-omap-experimental-api \
+	--enable-exynos-experimental-api \
+	--enable-freedreno-experimental-api \
+	--enable-omap-experimental-api \
 %endif
-		--enable-nouveau-experimental-api
+	--enable-nouveau-experimental-api
 %make
 
 %install
@@ -367,7 +357,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %endif
 %endif
 
-%files -n %{develname}
+%files -n %{devname}
 %{_includedir}/libdrm
 %{_includedir}/libkms
 %{_includedir}/*.h
@@ -384,5 +374,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-%_mandir/man3/*
-%_mandir/man7/*
+%{_mandir}/man3/*
+%{_mandir}/man7/*
+
