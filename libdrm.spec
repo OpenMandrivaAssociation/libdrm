@@ -42,8 +42,6 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 Patch4:		libdrm-2.4.0-no-bc.patch
 # make rule to print the list of test programs
 Patch5:		libdrm-2.4.25-check-programs.patch
-# add qxl header
-Patch6:		0001-qxl-add-header-file.patch
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
