@@ -29,7 +29,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.46
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://xorg.freedesktop.org
@@ -217,6 +217,11 @@ Requires:	uclibc-%{libintel} = %{version}
 %endif
 Requires:	uclibc-%{libnouveau} = %{version}
 Requires:	uclibc-%{libradeon} = %{version}
+%ifarch	%arm
+Requires:	uclibc-%{libexynos} = %{version}
+Requires:	uclibc-%{libfreedreno} = %{version}
+Requires:	uclibc-%{libomap} = %{version}
+%endif
 %endif
 
 Provides:	%{name}-devel = %{version}-%{release}
