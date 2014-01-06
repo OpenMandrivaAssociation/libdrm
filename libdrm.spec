@@ -12,24 +12,22 @@
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
-%ifarch %arm
 # exynos
 %define exynos_major 1
 %define libexynos %mklibname drm_exynos %{exynos_major}
 # adreno
 %define freedreno_major 1
-%define libfreedreno %mklibname drm_freedreo %{freedreno_major}
+%define libfreedreno %mklibname drm_freedreno %{freedreno_major}
 # omap
 %define omap_major 1
 %define libomap %mklibname drm_omap %{omap_major}
-%endif
 
 %bcond_without	uclibc
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.46
-Release:	2
+Version:	2.4.49
+Release:	5
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://xorg.freedesktop.org
@@ -138,7 +136,6 @@ Group:		System/Libraries
 %description -n uclibc-%{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
-%ifarch %arm
 #
 #Samsung Exynos video
 #
@@ -191,7 +188,6 @@ Group:		System/Libraries
 
 %description -n uclibc-%{libomap}
 Shared library for OMAP kernel Direct Rendering Manager services.
-%endif
 
 %package -n	%{devname}
 Summary:	Development files for %{name}
@@ -203,11 +199,9 @@ Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
-%ifarch	%arm
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
 Requires:	%{libomap} = %{version}
-%endif
 
 %if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}
@@ -217,11 +211,9 @@ Requires:	uclibc-%{libintel} = %{version}
 %endif
 Requires:	uclibc-%{libnouveau} = %{version}
 Requires:	uclibc-%{libradeon} = %{version}
-%ifarch	%arm
 Requires:	uclibc-%{libexynos} = %{version}
 Requires:	uclibc-%{libfreedreno} = %{version}
 Requires:	uclibc-%{libomap} = %{version}
-%endif
 %endif
 
 Provides:	%{name}-devel = %{version}-%{release}
@@ -256,11 +248,9 @@ pushd uclibc
 %ifnarch %{ix86} x86_64
 	--disable-intel \
 %endif
-%ifarch %{arm}
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
 	--enable-omap-experimental-api \
-%endif
 	--enable-nouveau-experimental-api
 %make
 popd
@@ -273,11 +263,9 @@ pushd system
 %ifnarch %{ix86} x86_64
 	--disable-intel \
 %endif
-%ifarch %{arm}
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
 	--enable-omap-experimental-api \
-%endif
 	--enable-nouveau-experimental-api
 %make
 
@@ -338,7 +326,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
 %endif
 
-%ifarch %arm
 %files -n %{libexynos}
 %{_libdir}/libdrm_exynos.so.%{exynos_major}*
 
@@ -358,17 +345,14 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n uclibc-%{libfreedreno}
 %{uclibc_root}%{_libdir}/libdrm_freedreno.so.%{freedreno_major}*
 %endif
-%endif
 
 %files -n %{devname}
 %{_includedir}/libdrm
 %{_includedir}/libkms
 %{_includedir}/*.h
-%ifarch %{arm}
 %{_includedir}/exynos/
 %{_includedir}/freedreno/
 %{_includedir}/omap/
-%endif
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
 %if %{with uclibc}
