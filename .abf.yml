@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   libdrm-2.4.52.tar.bz2: 7be6767efd0988c76c984fcdd1c8b712bcb9aea5
+sources:
+  libdrm-2.4.53.tar.bz2: d3381432045984faa060a43425d67fd359bf29e3
