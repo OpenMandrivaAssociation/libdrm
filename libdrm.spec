@@ -44,7 +44,7 @@ Patch5:		libdrm-2.4.25-check-programs.patch
 # For building man pages
 BuildRequires:	docbook-style-xsl
 BuildRequires:	xsltproc
-BuildRequires:	kernel-headers >= 1:2.6.27.4-3mnb2
+BuildRequires:	kernel-headers
 BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
