@@ -251,8 +251,7 @@ pushd uclibc
 %endif
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api \
-	--enable-nouveau-experimental-api
+	--enable-omap-experimental-api
 %make
 popd
 %endif
@@ -266,8 +265,7 @@ pushd system
 %endif
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api \
-	--enable-nouveau-experimental-api
+	--enable-omap-experimental-api
 %make
 
 %install
