@@ -26,7 +26,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.54
+Version:	2.4.58
 Release:	2
 Group:		System/Libraries
 License:	MIT/X11
@@ -40,6 +40,7 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 Patch4:		libdrm-2.4.0-no-bc.patch
 # make rule to print the list of test programs
 Patch5:		libdrm-2.4.25-check-programs.patch
+Patch6:		drm-update-arm.patch
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
@@ -250,8 +251,7 @@ pushd uclibc
 %endif
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api \
-	--enable-nouveau-experimental-api
+	--enable-omap-experimental-api
 %make
 popd
 %endif
@@ -265,8 +265,7 @@ pushd system
 %endif
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api \
-	--enable-nouveau-experimental-api
+	--enable-omap-experimental-api
 %make
 
 %install
