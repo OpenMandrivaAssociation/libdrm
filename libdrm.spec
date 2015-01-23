@@ -26,11 +26,11 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.58
-Release:	3
+Version:	2.4.59
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
-Url:		http://xorg.freedesktop.org
+Url:		http://dri.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1:	91-drm-modeset.rules
 # Backports from git:
