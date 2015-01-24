@@ -70,6 +70,7 @@ Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires:	%{name}-common
 
+%if %{with uclibc}
 %package -n	uclibc-%{libname}
 Summary:	Userspace interface to kernel DRM services (uClibc build)
 Group:		System/Libraries
@@ -77,6 +78,7 @@ Requires:	%{name}-common
 
 %description -n	uclibc-%{libname}
 Userspace interface to kernel DRM services
+%endif
 
 %package -n	%{libkms}
 Summary:	Shared library for KMS
@@ -85,12 +87,14 @@ Group:		System/Libraries
 %description -n	%{libkms}
 Shared library for kernel mode setting.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libkms}
 Summary:	Shared library for KMS (uClibc build)
 Group:		System/Libraries
 
 %description -n	uclibc-%{libkms}
 Shared library for kernel mode setting.
+%endif
 
 %ifarch %{ix86} x86_64
 %package -n	%{libintel}
@@ -100,12 +104,14 @@ Group:		System/Libraries
 %description -n	%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libintel}
 Summary:	Shared library for Intel kernel DRM services (uClibc build)
 Group:		System/Libraries
 
 %description -n	uclibc-%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
+%endif
 %endif
 
 %package -n	%{libnouveau}
@@ -115,12 +121,14 @@ Group:		System/Libraries
 %description -n	%{libnouveau}
 Shared library for Nouveau kernel Direct Rendering Manager services.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libnouveau}
 Summary:	Shared library for Nouveau kernel DRM services (uClibc build)
 Group:		System/Libraries
 
 %description -n	uclibc-%{libnouveau}
 Shared library for Nouveau kernel Direct Rendering Manager services.
+%endif
 
 %package -n	%{libradeon}
 Summary:	Shared library for Radeon kernel DRM services
@@ -130,12 +138,17 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libradeon}
 Summary:	Shared library for Radeon kernel DRM services (uClibc build)
 Group:		System/Libraries
 
 %description -n uclibc-%{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
+%endif
+
+# ARM stuff
+%ifarch %{armx}
 
 #
 #Samsung Exynos video
@@ -148,12 +161,14 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libexynos}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libexynos}
 Summary:	Shared library for Exynos kernel DRM services (uClibc build)
 Group:		System/Libraries
 
 %description -n uclibc-%{libexynos}
 Shared library for Exynos kernel Direct Rendering Manager services.
+%endif
 
 #
 #Free Adreno
@@ -165,12 +180,14 @@ Group:		System/Libraries
 %description -n %{libfreedreno}
 Shared library for Adreno kernel Direct Rendering Manager services.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libfreedreno}
 Summary:	Shared library for Adreno kernel DRM services (uClibc build)
 Group:		System/Libraries
 
 %description -n uclibc-%{libfreedreno}
 Shared library for Adreno kernel Direct Rendering Manager services.
+%endif
 
 #
 #Omap
@@ -183,12 +200,15 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libomap}
 Shared library for OMAP kernel Direct Rendering Manager services.
 
+%if %{with uclibc}
 %package -n	uclibc-%{libomap}
 Summary:	Shared library for OMAP kernel DRM services (uClibc build)
 Group:		System/Libraries
 
 %description -n uclibc-%{libomap}
 Shared library for OMAP kernel Direct Rendering Manager services.
+%endif
+%endif
 
 %package -n	%{devname}
 Summary:	Development files for %{name}
@@ -200,9 +220,11 @@ Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
+%ifarch %{armx}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
 Requires:	%{libomap} = %{version}
+%endif
 
 %if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}
@@ -212,9 +234,11 @@ Requires:	uclibc-%{libintel} = %{version}
 %endif
 Requires:	uclibc-%{libnouveau} = %{version}
 Requires:	uclibc-%{libradeon} = %{version}
+%ifarch %{armx}
 Requires:	uclibc-%{libexynos} = %{version}
 Requires:	uclibc-%{libfreedreno} = %{version}
 Requires:	uclibc-%{libomap} = %{version}
+%endif
 %endif
 
 Provides:	%{name}-devel = %{version}-%{release}
@@ -249,23 +273,31 @@ pushd uclibc
 %ifnarch %{ix86} x86_64
 	--disable-intel \
 %endif
+%ifarch %{armx}
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api
+	--enable-omap-experimental-api \
+%endif
+	--enable-udev
+
 %make
 popd
 %endif
 
 mkdir -p system
 pushd system
-%configure2_5x \
+%configure \
 	--enable-udev \
 %ifnarch %{ix86} x86_64
 	--disable-intel \
 %endif
+%ifarch %{armx}
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api
+	--enable-omap-experimental-api \
+%endif
+	--enable-udev
+
 %make
 
 %install
@@ -325,6 +357,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
 %endif
 
+%ifarch %{armx}
 %files -n %{libexynos}
 %{_libdir}/libdrm_exynos.so.%{exynos_major}*
 
@@ -344,14 +377,17 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n uclibc-%{libfreedreno}
 %{uclibc_root}%{_libdir}/libdrm_freedreno.so.%{freedreno_major}*
 %endif
+%endif
 
 %files -n %{devname}
 %{_includedir}/libdrm
 %{_includedir}/libkms
 %{_includedir}/*.h
+%ifarch %{armx}
 %{_includedir}/exynos/
 %{_includedir}/freedreno/
 %{_includedir}/omap/
+%endif
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
 %if %{with uclibc}
@@ -362,4 +398,3 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_libdir}/pkgconfig/libkms*.pc
 %{_mandir}/man3/*
 %{_mandir}/man7/*
-
