@@ -37,7 +37,7 @@ Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
 # remove backwards compat not needed on Fedora
-Patch4:		libdrm-2.4.0-no-bc.patch
+Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
 Patch5:		libdrm-2.4.25-check-programs.patch
 Patch6:		drm-update-arm.patch
