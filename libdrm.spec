@@ -21,6 +21,12 @@
 # omap
 %define omap_major 1
 %define libomap %mklibname drm_omap %{omap_major}
+# etna
+%define etna_major 0
+%define libetnaviv %mklibname drm_etnaviv %{etna_major}
+# tegra
+%define tegra_major 0
+%define libtegra %mklibname drm_tegra %{tegra_major}
 
 %bcond_without	uclibc
 
@@ -41,6 +47,7 @@ Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
 Patch5:		libdrm-2.4.25-check-programs.patch
 Patch6:		drm-update-arm.patch
+Patch7:		0001-add-etnaviv.patch
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
@@ -208,6 +215,45 @@ Group:		System/Libraries
 %description -n uclibc-%{libomap}
 Shared library for OMAP kernel Direct Rendering Manager services.
 %endif
+
+#
+#etnaviv
+#
+%package -n	%{libetnaviv}
+Summary:	Shared library for GCxxx kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libetnaviv}
+Shared library for GCxxx kernel Direct Rendering Manager services.
+
+%if %{with uclibc}
+%package -n	uclibc-%{libetnaviv}
+Summary:	Shared library for GCxxx kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n uclibc-%{libetnaviv}
+Shared library for GCxxx kernel Direct Rendering Manager services.
+%endif
+#
+#tegra
+#
+%package -n	%{libtegra}
+Summary:	Shared library for Tegra kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libtegra}
+Shared library for Tegra kernel Direct Rendering Manager services.
+
+%if %{with uclibc}
+%package -n	uclibc-%{libtegra}
+Summary:	Shared library for Tegra kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n uclibc-%{libtegra}
+Shared library for Tegra kernel Direct Rendering Manager services.
+%endif
 %endif
 
 %package -n	%{devname}
@@ -224,6 +270,8 @@ Requires:	%{libradeon} = %{version}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
 Requires:	%{libomap} = %{version}
+Requires:	%{libetnaviv} = %{version}
+Requires:	%{libtegra} = %{version}
 %endif
 
 %if %{with uclibc}
@@ -238,6 +286,7 @@ Requires:	uclibc-%{libradeon} = %{version}
 Requires:	uclibc-%{libexynos} = %{version}
 Requires:	uclibc-%{libfreedreno} = %{version}
 Requires:	uclibc-%{libomap} = %{version}
+Requires:	uclibc-%{libetnaviv} = %{version}
 %endif
 %endif
 
@@ -277,6 +326,8 @@ pushd uclibc
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
 	--enable-omap-experimental-api \
+	--enable-tegra-experimental-api \
+	--enable-etnaviv-experimental-api \
 %endif
 	--enable-udev
 
@@ -294,6 +345,8 @@ pushd system
 %ifarch %{armx}
 	--enable-exynos-experimental-api \
 	--enable-freedreno-experimental-api \
+	--enable-tegra-experimental-api \
+	--enable-etnaviv-experimental-api \
 	--enable-omap-experimental-api \
 %endif
 	--enable-udev
@@ -362,10 +415,16 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_libdir}/libdrm_exynos.so.%{exynos_major}*
 
 %files -n %{libfreedreno}
-%{_libdir}/libdrm_freedreno.so.%{exynos_major}*
+%{_libdir}/libdrm_freedreno.so.%{freedreno_major}*
 
 %files -n %{libomap}
-%{_libdir}/libdrm_omap.so.%{exynos_major}*
+%{_libdir}/libdrm_omap.so.%{omap_major}*
+
+%files -n %{libetnaviv}
+%{_libdir}/libdrm_etnaviv.so.%{etna_major}*
+
+%files -n %{libtegra}
+%{_libdir}/libdrm_tegra.so.%{tegra_major}*
 
 %if %{with uclibc}
 %files -n uclibc-%{libexynos}
@@ -376,6 +435,12 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n uclibc-%{libfreedreno}
 %{uclibc_root}%{_libdir}/libdrm_freedreno.so.%{freedreno_major}*
+
+%files -n uclibc-%{libetnaviv}
+%{uclibc_root}%{_libdir}/libdrm_etnaviv.so.%{etna_major}*
+
+%files -n uclibc-%{libtegra}
+%{uclibc_root}%{_libdir}/libdrm_tegra.so.%{tegra_major}*
 %endif
 %endif
 
