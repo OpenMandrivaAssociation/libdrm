@@ -331,7 +331,8 @@ pushd uclibc
 %endif
 	--enable-udev
 
-%make
+%make -j1 V=1
+
 popd
 %endif
 
