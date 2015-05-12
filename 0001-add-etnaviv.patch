@@ -44,11 +44,10 @@ Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
  create mode 100644 tests/etnaviv/write_bmp.c
  create mode 100644 tests/etnaviv/write_bmp.h
 
-diff --git a/Makefile.am b/Makefile.am
-index 42d3d7f..36bdb12 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -73,6 +73,10 @@ if HAVE_TEGRA
+diff -Naur libdrm-2.4.61/Makefile.am libdrm-2.4.61.tpg/Makefile.am
+--- libdrm-2.4.61/Makefile.am	2015-05-06 23:04:31.000000000 +0000
++++ libdrm-2.4.61.tpg/Makefile.am	2015-05-12 18:05:37.289406579 +0000
+@@ -73,6 +73,10 @@
  TEGRA_SUBDIR = tegra
  endif
  
@@ -56,46 +55,45 @@ index 42d3d7f..36bdb12 100644
 +ETNAVIV_SUBDIR = etnaviv
 +endif
 +
- SUBDIRS = \
- 	. \
- 	$(LIBKMS_SUBDIR) \
-@@ -83,6 +87,7 @@ SUBDIRS = \
+ if BUILD_MANPAGES
+ if HAVE_MANPAGES_STYLESHEET
+ MAN_SUBDIR = man
+@@ -89,6 +93,7 @@
  	$(EXYNOS_SUBDIR) \
  	$(FREEDRENO_SUBDIR) \
  	$(TEGRA_SUBDIR) \
 +	$(ETNAVIV_SUBDIR) \
  	tests \
- 	man
+ 	$(MAN_SUBDIR)
  
-diff --git a/configure.ac b/configure.ac
-index 155d577..31de6e5 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -109,6 +109,11 @@ AC_ARG_ENABLE(tegra-experimental-api,
+diff -Naur libdrm-2.4.61/configure.ac libdrm-2.4.61.tpg/configure.ac
+--- libdrm-2.4.61/configure.ac	2015-05-06 23:53:46.000000000 +0000
++++ libdrm-2.4.61.tpg/configure.ac	2015-05-12 18:07:38.180677216 +0000
+@@ -121,6 +121,11 @@
  	      [Enable support for Tegra's experimental API (default: disabled)]),
  	      [TEGRA=$enableval], [TEGRA=no])
  
 +AC_ARG_ENABLE(etnaviv-experimental-api,
-+	      AS_HELP_STRING([--enable-etnaviv-experimental-api],
-+	      [Enable support for etnaviv's experimental API (default: disabled)]),
-+	      [ETNAVIV=$enableval], [ETNAVIV=no])
++             AS_HELP_STRING([--enable-etnaviv-experimental-api],
++             [Enable support for etnaviv's experimental API (default: disabled)]),
++             [ETNAVIV=$enableval], [ETNAVIV=no])
 +
  AC_ARG_ENABLE(install-test-programs,
  		  AS_HELP_STRING([--enable-install-test-programs],
  		  [Install test programs (default: no)]),
-@@ -341,6 +346,11 @@ if test "x$TEGRA" = xyes; then
+@@ -353,6 +358,11 @@
  	AC_DEFINE(HAVE_TEGRA, 1, [Have Tegra support])
  fi
  
 +AM_CONDITIONAL(HAVE_ETNAVIV, [test "x$ETNAVIV" = xyes])
 +if test "x$ETNAVIV" = xyes; then
-+	AC_DEFINE(HAVE_ETNAVIV, 1, [Have etnaviv support])
++       AC_DEFINE(HAVE_ETNAVIV, 1, [Have etnaviv support])
 +fi
 +
  AM_CONDITIONAL(HAVE_INSTALL_TESTS, [test "x$INSTALL_TESTS" = xyes])
  if test "x$INSTALL_TESTS" = xyes; then
  	AC_DEFINE(HAVE_INSTALL_TESTS, 1, [Install test programs])
-@@ -442,6 +452,8 @@ AC_CONFIG_FILES([
+@@ -442,6 +452,8 @@
  	freedreno/libdrm_freedreno.pc
  	tegra/Makefile
  	tegra/libdrm_tegra.pc
@@ -104,7 +102,7 @@ index 155d577..31de6e5 100644
  	tests/Makefile
  	tests/modeprint/Makefile
  	tests/modetest/Makefile
-@@ -452,6 +464,7 @@ AC_CONFIG_FILES([
+@@ -452,6 +464,7 @@
  	tests/exynos/Makefile
  	tests/tegra/Makefile
  	tests/nouveau/Makefile
@@ -112,17 +110,15 @@ index 155d577..31de6e5 100644
  	man/Makefile
  	libdrm.pc])
  AC_OUTPUT
-@@ -468,4 +481,5 @@ echo "  OMAP API       $OMAP"
+@@ -468,4 +481,5 @@
  echo "  EXYNOS API     $EXYNOS"
  echo "  Freedreno API  $FREEDRENO (kgsl: $FREEDRENO_KGSL)"
  echo "  Tegra API      $TEGRA"
 +echo "  Etnaviv API    $ETNAVIV"
  echo ""
-diff --git a/etnaviv/Makefile.am b/etnaviv/Makefile.am
-new file mode 100644
-index 0000000..8b0bc41
---- /dev/null
-+++ b/etnaviv/Makefile.am
+diff -Naur libdrm-2.4.61/etnaviv/Makefile.am libdrm-2.4.61.tpg/etnaviv/Makefile.am
+--- libdrm-2.4.61/etnaviv/Makefile.am	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/Makefile.am	2015-05-12 18:09:13.923283177 +0000
 @@ -0,0 +1,22 @@
 +AM_CFLAGS = \
 +	$(WARN_CFLAGS) \
@@ -146,11 +142,9 @@ index 0000000..8b0bc41
 +
 +pkgconfigdir = @pkgconfigdir@
 +pkgconfig_DATA = libdrm_etnaviv.pc
-diff --git a/etnaviv/etnaviv_bo.c b/etnaviv/etnaviv_bo.c
-new file mode 100644
-index 0000000..81f0d3c
---- /dev/null
-+++ b/etnaviv/etnaviv_bo.c
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_bo.c libdrm-2.4.61.tpg/etnaviv/etnaviv_bo.c
+--- libdrm-2.4.61/etnaviv/etnaviv_bo.c	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_bo.c	2015-05-12 18:09:13.923283177 +0000
 @@ -0,0 +1,327 @@
 +/*
 + * Copyright (C) 2014 Etnaviv Project
@@ -479,11 +473,9 @@ index 0000000..81f0d3c
 +			&req, sizeof(req));
 +}
 +
-diff --git a/etnaviv/etnaviv_cmd_stream.c b/etnaviv/etnaviv_cmd_stream.c
-new file mode 100644
-index 0000000..1e38ae4
---- /dev/null
-+++ b/etnaviv/etnaviv_cmd_stream.c
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_cmd_stream.c libdrm-2.4.61.tpg/etnaviv/etnaviv_cmd_stream.c
+--- libdrm-2.4.61/etnaviv/etnaviv_cmd_stream.c	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_cmd_stream.c	2015-05-12 18:09:13.923283177 +0000
 @@ -0,0 +1,265 @@
 +/*
 + * Copyright (C) 2014-2015 Etnaviv Project
@@ -750,11 +742,9 @@ index 0000000..1e38ae4
 +		addr <<= r->shift;
 +	etna_cmd_stream_emit(stream, addr | r->or);
 +}
-diff --git a/etnaviv/etnaviv_device.c b/etnaviv/etnaviv_device.c
-new file mode 100644
-index 0000000..506e851
---- /dev/null
-+++ b/etnaviv/etnaviv_device.c
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_device.c libdrm-2.4.61.tpg/etnaviv/etnaviv_device.c
+--- libdrm-2.4.61/etnaviv/etnaviv_device.c	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_device.c	2015-05-12 18:09:13.923283177 +0000
 @@ -0,0 +1,99 @@
 +/*
 + * Copyright (C) 2014 Etnaviv Project
@@ -855,11 +845,9 @@ index 0000000..506e851
 +	free(dev);
 +}
 +
-diff --git a/etnaviv/etnaviv_drm.h b/etnaviv/etnaviv_drm.h
-new file mode 100644
-index 0000000..009dfe9
---- /dev/null
-+++ b/etnaviv/etnaviv_drm.h
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_drm.h libdrm-2.4.61.tpg/etnaviv/etnaviv_drm.h
+--- libdrm-2.4.61/etnaviv/etnaviv_drm.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_drm.h	2015-05-12 18:09:13.923283177 +0000
 @@ -0,0 +1,214 @@
 +/*
 + * Copyright (C) 2013 Red Hat
@@ -1075,11 +1063,9 @@ index 0000000..009dfe9
 +#define DRM_IOCTL_ETNAVIV_WAIT_FENCE   DRM_IOW (DRM_COMMAND_BASE + DRM_ETNAVIV_WAIT_FENCE, struct drm_etnaviv_wait_fence)
 +
 +#endif /* __ETNAVIV_DRM_H__ */
-diff --git a/etnaviv/etnaviv_drmif.h b/etnaviv/etnaviv_drmif.h
-new file mode 100644
-index 0000000..cc9dfbd
---- /dev/null
-+++ b/etnaviv/etnaviv_drmif.h
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_drmif.h libdrm-2.4.61.tpg/etnaviv/etnaviv_drmif.h
+--- libdrm-2.4.61/etnaviv/etnaviv_drmif.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_drmif.h	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,150 @@
 +/*
 + * Copyright (C) 2014-2015 Etnaviv Project
@@ -1231,11 +1217,9 @@ index 0000000..cc9dfbd
 +void etna_cmd_stream_reloc(struct etna_cmd_stream *stream, const struct etna_reloc *r);
 +
 +#endif /* ETNAVIV_DRMIF_H_ */
-diff --git a/etnaviv/etnaviv_pipe.c b/etnaviv/etnaviv_pipe.c
-new file mode 100644
-index 0000000..16d2de3
---- /dev/null
-+++ b/etnaviv/etnaviv_pipe.c
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_pipe.c libdrm-2.4.61.tpg/etnaviv/etnaviv_pipe.c
+--- libdrm-2.4.61/etnaviv/etnaviv_pipe.c	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_pipe.c	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,182 @@
 +/*
 + * Copyright (C) 2014 Etnaviv Project
@@ -1419,11 +1403,9 @@ index 0000000..16d2de3
 +		etna_pipe_del(pipe);
 +	return NULL;
 +}
-diff --git a/etnaviv/etnaviv_priv.h b/etnaviv/etnaviv_priv.h
-new file mode 100644
-index 0000000..71b8813
---- /dev/null
-+++ b/etnaviv/etnaviv_priv.h
+diff -Naur libdrm-2.4.61/etnaviv/etnaviv_priv.h libdrm-2.4.61.tpg/etnaviv/etnaviv_priv.h
+--- libdrm-2.4.61/etnaviv/etnaviv_priv.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/etnaviv_priv.h	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,169 @@
 +/*
 + * Copyright (C) 2014 Etnaviv Project
@@ -1594,11 +1576,9 @@ index 0000000..71b8813
 +}
 +
 +#endif /* ETNAVIV_PRIV_H_ */
-diff --git a/etnaviv/libdrm_etnaviv.pc.in b/etnaviv/libdrm_etnaviv.pc.in
-new file mode 100644
-index 0000000..13fed01
---- /dev/null
-+++ b/etnaviv/libdrm_etnaviv.pc.in
+diff -Naur libdrm-2.4.61/etnaviv/libdrm_etnaviv.pc.in libdrm-2.4.61.tpg/etnaviv/libdrm_etnaviv.pc.in
+--- libdrm-2.4.61/etnaviv/libdrm_etnaviv.pc.in	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/libdrm_etnaviv.pc.in	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,11 @@
 +prefix=@prefix@
 +exec_prefix=@exec_prefix@
@@ -1611,11 +1591,9 @@ index 0000000..13fed01
 +Libs: -L${libdir} -ldrm_etnaviv
 +Cflags: -I${includedir} -I${includedir}/libdrm
 +Requires.private: libdrm
-diff --git a/etnaviv/list.h b/etnaviv/list.h
-new file mode 100644
-index 0000000..27e0761
---- /dev/null
-+++ b/etnaviv/list.h
+diff -Naur libdrm-2.4.61/etnaviv/list.h libdrm-2.4.61.tpg/etnaviv/list.h
+--- libdrm-2.4.61/etnaviv/list.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/etnaviv/list.h	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,137 @@
 +/*
 + *
@@ -1754,11 +1732,10 @@ index 0000000..27e0761
 +	pos = container_of(pos->member.prev, pos, member))
 +
 +#endif /*_U_DOUBLE_LIST_H_*/
-diff --git a/tests/Makefile.am b/tests/Makefile.am
-index 10f54e3..cfe49b6 100644
---- a/tests/Makefile.am
-+++ b/tests/Makefile.am
-@@ -35,6 +35,10 @@ if HAVE_NOUVEAU
+diff -Naur libdrm-2.4.61/tests/Makefile.am libdrm-2.4.61.tpg/tests/Makefile.am
+--- libdrm-2.4.61/tests/Makefile.am	2015-05-12 18:03:24.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/Makefile.am	2015-05-12 18:08:30.563095494 +0000
+@@ -35,6 +35,10 @@
  SUBDIRS += nouveau
  endif
  
@@ -1766,14 +1743,12 @@ index 10f54e3..cfe49b6 100644
 +#SUBDIRS += etnaviv
 +#endif
 +
- if HAVE_LIBUDEV
- 
- check_LTLIBRARIES = libdrmtest.la
-diff --git a/tests/etnaviv/Makefile.am b/tests/etnaviv/Makefile.am
-new file mode 100644
-index 0000000..b46d5c4
---- /dev/null
-+++ b/tests/etnaviv/Makefile.am
+ TESTS = \
+ 	drmsl \
+ 	hash \
+diff -Naur libdrm-2.4.61/tests/etnaviv/Makefile.am libdrm-2.4.61.tpg/tests/etnaviv/Makefile.am
+--- libdrm-2.4.61/tests/etnaviv/Makefile.am	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/Makefile.am	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,17 @@
 +AM_CFLAGS = \
 +	-I $(top_srcdir)/include/drm \
@@ -1792,11 +1767,9 @@ index 0000000..b46d5c4
 +etnaviv_2d_test_SOURCES = \
 +	etnaviv_2d_test.c \
 +	write_bmp.c
-diff --git a/tests/etnaviv/cmdstream.xml.h b/tests/etnaviv/cmdstream.xml.h
-new file mode 100644
-index 0000000..844f829
---- /dev/null
-+++ b/tests/etnaviv/cmdstream.xml.h
+diff -Naur libdrm-2.4.61/tests/etnaviv/cmdstream.xml.h libdrm-2.4.61.tpg/tests/etnaviv/cmdstream.xml.h
+--- libdrm-2.4.61/tests/etnaviv/cmdstream.xml.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/cmdstream.xml.h	2015-05-12 18:09:13.924283204 +0000
 @@ -0,0 +1,218 @@
 +#ifndef CMDSTREAM_XML
 +#define CMDSTREAM_XML
@@ -2016,11 +1989,9 @@ index 0000000..844f829
 +
 +
 +#endif /* CMDSTREAM_XML */
-diff --git a/tests/etnaviv/etnaviv_2d_test.c b/tests/etnaviv/etnaviv_2d_test.c
-new file mode 100644
-index 0000000..246f90d
---- /dev/null
-+++ b/tests/etnaviv/etnaviv_2d_test.c
+diff -Naur libdrm-2.4.61/tests/etnaviv/etnaviv_2d_test.c libdrm-2.4.61.tpg/tests/etnaviv/etnaviv_2d_test.c
+--- libdrm-2.4.61/tests/etnaviv/etnaviv_2d_test.c	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/etnaviv_2d_test.c	2015-05-12 18:09:13.925283232 +0000
 @@ -0,0 +1,231 @@
 +/*
 + * Copyright (C) 2014 Etnaviv Project
@@ -2253,11 +2224,9 @@ index 0000000..246f90d
 +
 +	return ret;
 +}
-diff --git a/tests/etnaviv/state.xml.h b/tests/etnaviv/state.xml.h
-new file mode 100644
-index 0000000..e7b36df
---- /dev/null
-+++ b/tests/etnaviv/state.xml.h
+diff -Naur libdrm-2.4.61/tests/etnaviv/state.xml.h libdrm-2.4.61.tpg/tests/etnaviv/state.xml.h
+--- libdrm-2.4.61/tests/etnaviv/state.xml.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/state.xml.h	2015-05-12 18:09:13.925283232 +0000
 @@ -0,0 +1,348 @@
 +#ifndef STATE_XML
 +#define STATE_XML
@@ -2607,11 +2576,9 @@ index 0000000..e7b36df
 +
 +
 +#endif /* STATE_XML */
-diff --git a/tests/etnaviv/state_2d.xml.h b/tests/etnaviv/state_2d.xml.h
-new file mode 100644
-index 0000000..fb22cfa
---- /dev/null
-+++ b/tests/etnaviv/state_2d.xml.h
+diff -Naur libdrm-2.4.61/tests/etnaviv/state_2d.xml.h libdrm-2.4.61.tpg/tests/etnaviv/state_2d.xml.h
+--- libdrm-2.4.61/tests/etnaviv/state_2d.xml.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/state_2d.xml.h	2015-05-12 18:09:13.926283259 +0000
 @@ -0,0 +1,1473 @@
 +#ifndef STATE_2D_XML
 +#define STATE_2D_XML
@@ -4086,11 +4053,9 @@ index 0000000..fb22cfa
 +
 +
 +#endif /* STATE_2D_XML */
-diff --git a/tests/etnaviv/write_bmp.c b/tests/etnaviv/write_bmp.c
-new file mode 100644
-index 0000000..40de84e
---- /dev/null
-+++ b/tests/etnaviv/write_bmp.c
+diff -Naur libdrm-2.4.61/tests/etnaviv/write_bmp.c libdrm-2.4.61.tpg/tests/etnaviv/write_bmp.c
+--- libdrm-2.4.61/tests/etnaviv/write_bmp.c	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/write_bmp.c	2015-05-12 18:09:13.926283259 +0000
 @@ -0,0 +1,152 @@
 +/*
 + * Copyright 2011      Luc Verhaegen <libv@codethink.co.uk>
@@ -4244,11 +4209,9 @@ index 0000000..40de84e
 +	write(fd, buffer, width * height * 4);
 +}
 +
-diff --git a/tests/etnaviv/write_bmp.h b/tests/etnaviv/write_bmp.h
-new file mode 100644
-index 0000000..667fa87
---- /dev/null
-+++ b/tests/etnaviv/write_bmp.h
+diff -Naur libdrm-2.4.61/tests/etnaviv/write_bmp.h libdrm-2.4.61.tpg/tests/etnaviv/write_bmp.h
+--- libdrm-2.4.61/tests/etnaviv/write_bmp.h	1970-01-01 00:00:00.000000000 +0000
++++ libdrm-2.4.61.tpg/tests/etnaviv/write_bmp.h	2015-05-12 18:09:13.927283287 +0000
 @@ -0,0 +1,34 @@
 +/*
 + * Copyright 2011      Luc Verhaegen <libv@codethink.co.uk>
@@ -4284,6 +4247,3 @@ index 0000000..667fa87
 +void bmp_dump32_ex(char *buffer, unsigned width, unsigned height, bool flip, bool bgra, bool alpha, const char *filename);
 +
 +#endif /* BMP_DUMP_H */
--- 
-2.1.4
-

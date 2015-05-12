@@ -45,7 +45,7 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 # remove backwards compat not needed on Fedora
 Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
-Patch5:		libdrm-2.4.25-check-programs.patch
+Patch5:		libdrm-2.4.61-check-programs.patch
 Patch6:		drm-update-arm.patch
 Patch7:		0001-add-etnaviv.patch
 
@@ -62,14 +62,14 @@ BuildRequires:	uClibc-devel
 %endif
 
 %description
-Userspace interface to kernel DRM services
+Userspace interface to kernel DRM services.
 
 %package	common
 Summary:	Common files for the userspace interface to kernel DRM services
 Group:		System/Libraries
 
 %description	common
-Common files for the userspace interface to kernel DRM services
+Common files for the userspace interface to kernel DRM services.
 
 %package -n	%{libname}
 Summary:	Userspace interface to kernel DRM services
@@ -84,7 +84,7 @@ Group:		System/Libraries
 Requires:	%{name}-common
 
 %description -n	uclibc-%{libname}
-Userspace interface to kernel DRM services
+Userspace interface to kernel DRM services.
 %endif
 
 %package -n	%{libkms}
