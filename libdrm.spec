@@ -45,7 +45,7 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 # remove backwards compat not needed on Fedora
 Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
-Patch5:		libdrm-2.4.61-check-programs.patch
+#Patch5:		libdrm-2.4.61-check-programs.patch
 Patch6:		drm-update-arm.patch
 Patch7:		0001-add-etnaviv.patch
 
@@ -331,7 +331,7 @@ pushd uclibc
 %endif
 	--enable-udev
 
-%make -j1 V=1
+%make
 
 popd
 %endif
