@@ -33,7 +33,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.61
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -59,6 +59,8 @@ BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
+BuildRequires:	uclibc-libudev-devel
+BuildRequires:	uclibc-pciaccess-devel
 %endif
 
 %description
@@ -256,7 +258,8 @@ Shared library for Tegra kernel Direct Rendering Manager services.
 %endif
 %endif
 
-%package -n	%{devname}
+%if %{with uclibc}
+%package -n	uclibc-%{devname}
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
@@ -274,7 +277,6 @@ Requires:	%{libetnaviv} = %{version}
 Requires:	%{libtegra} = %{version}
 %endif
 
-%if %{with uclibc}
 Requires:	uclibc-%{libname} = %{version}
 Requires:	uclibc-%{libkms} = %{version}
 %ifarch %{ix86} x86_64
@@ -288,8 +290,30 @@ Requires:	uclibc-%{libfreedreno} = %{version}
 Requires:	uclibc-%{libomap} = %{version}
 Requires:	uclibc-%{libetnaviv} = %{version}
 %endif
+Provides:	uclibc-%{name}-devel = %{version}-%{release}
+Conflicts:	%{devname} < 2.4.61-2
+
+%description -n	uclibc-%{devname}
+Development files for uclibc-%{name}.
 %endif
 
+%package -n	%{devname}
+Summary:	Development files for %{name}
+Group:		Development/X11
+Requires:	%{libname} = %{version}
+Requires:	%{libkms} = %{version}
+%ifarch %{ix86} x86_64
+Requires:	%{libintel} = %{version}
+%endif
+Requires:	%{libnouveau} = %{version}
+Requires:	%{libradeon} = %{version}
+%ifarch %{armx}
+Requires:	%{libexynos} = %{version}
+Requires:	%{libfreedreno} = %{version}
+Requires:	%{libomap} = %{version}
+Requires:	%{libetnaviv} = %{version}
+Requires:	%{libtegra} = %{version}
+%endif
 Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{_lib}drm-static-devel
 
@@ -409,6 +433,10 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %if %{with uclibc}
 %files -n uclibc-%{libradeon}
 %{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
+
+%files -n uclibc-%{devname}
+%{uclibc_root}%{_libdir}/libdrm*.so
+%{uclibc_root}%{_libdir}/libkms.so
 %endif
 
 %ifarch %{armx}
@@ -456,10 +484,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %endif
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/libdrm*.so
-%{uclibc_root}%{_libdir}/libkms.so
-%endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
 %{_mandir}/man3/*
