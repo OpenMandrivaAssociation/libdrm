@@ -59,8 +59,8 @@ BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
-BuildRequires:	uclibc-libudev-devel
-BuildRequires:	uclibc-pciaccess-devel
+BuildRequires:	uclibc-udev-devel
+BuildRequires:	uclibc-libpciaccess-devel
 %endif
 
 %description
