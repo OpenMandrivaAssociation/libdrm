@@ -57,6 +57,7 @@ BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
+BuildRequires:	valgrind-devel
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
 %endif
