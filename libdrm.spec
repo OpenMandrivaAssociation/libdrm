@@ -28,7 +28,7 @@
 %define tegra_major 0
 %define libtegra %mklibname drm_tegra %{tegra_major}
 
-%bcond_without	uclibc
+%bcond_with	uclibc
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
@@ -47,6 +47,9 @@ Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
 #Patch5:		libdrm-2.4.61-check-programs.patch
 Patch6:		drm-update-arm.patch
+# format patch from
+# https://github.com/austriancoder/libdrm.git
+# git format-patch $HASH --stdout > 0001-add-etnaviv.patch
 Patch7:		0001-add-etnaviv.patch
 
 # For building man pages
