@@ -12,6 +12,9 @@
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
+# amdgpu
+%define amdgpu_major 1
+%define libamdgpu %mklibname drm_amdgpu %{amdgpu_major}
 # exynos
 %define exynos_major 1
 %define libexynos %mklibname drm_exynos %{exynos_major}
@@ -32,7 +35,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.62
+Version:	2.4.64
 Release:	0.1
 Group:		System/Libraries
 License:	MIT/X11
@@ -46,8 +49,13 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
 #Patch5:		libdrm-2.4.61-check-programs.patch
+%ifarch %{armx}
 Patch6:		drm-update-arm.patch
+# format patch from
+# https://github.com/austriancoder/libdrm.git
+# git format-patch $HASH --stdout > 0001-add-etnaviv.patch
 Patch7:		0001-add-etnaviv.patch
+%endif
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
@@ -60,6 +68,8 @@ BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	valgrind-devel
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
+BuildRequires:	uclibc-udev-devel
+BuildRequires:	uclibc-libpciaccess-devel
 %endif
 
 %description
@@ -153,6 +163,23 @@ Group:		System/Libraries
 
 %description -n uclibc-%{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
+%endif
+
+%package -n	%{libamdgpu}
+Summary:	Shared library for AMD GPU kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libamdgpu}
+Shared library for AMD GPU kernel Direct Rendering Manager services.
+
+%if %{with uclibc}
+%package -n	uclibc-%{libamdgpu}
+Summary:	Shared library for AMD GPU kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n uclibc-%{libamdgpu}
+Shared library for AMD GPU kernel Direct Rendering Manager services.
 %endif
 
 # ARM stuff
@@ -257,6 +284,47 @@ Shared library for Tegra kernel Direct Rendering Manager services.
 %endif
 %endif
 
+%if %{with uclibc}
+%package -n	uclibc-%{devname}
+Summary:	Development files for %{name}
+Group:		Development/X11
+Requires:	%{libname} = %{version}
+Requires:	%{libkms} = %{version}
+%ifarch %{ix86} x86_64
+Requires:	%{libintel} = %{version}
+%endif
+Requires:	%{libnouveau} = %{version}
+Requires:	%{libradeon} = %{version}
+Requires:	%{libamdgpu} = %{version}
+%ifarch %{armx}
+Requires:	%{libexynos} = %{version}
+Requires:	%{libfreedreno} = %{version}
+Requires:	%{libomap} = %{version}
+Requires:	%{libetnaviv} = %{version}
+Requires:	%{libtegra} = %{version}
+%endif
+
+Requires:	uclibc-%{libname} = %{version}
+Requires:	uclibc-%{libkms} = %{version}
+%ifarch %{ix86} x86_64
+Requires:	uclibc-%{libintel} = %{version}
+%endif
+Requires:	uclibc-%{libnouveau} = %{version}
+Requires:	uclibc-%{libradeon} = %{version}
+Requires:	uclibc-%{libamdgpu} = %{version}
+%ifarch %{armx}
+Requires:	uclibc-%{libexynos} = %{version}
+Requires:	uclibc-%{libfreedreno} = %{version}
+Requires:	uclibc-%{libomap} = %{version}
+Requires:	uclibc-%{libetnaviv} = %{version}
+%endif
+Provides:	uclibc-%{name}-devel = %{version}-%{release}
+Conflicts:	%{devname} < 2.4.61-2
+
+%description -n	uclibc-%{devname}
+Development files for uclibc-%{name}.
+%endif
+
 %package -n	%{devname}
 Summary:	Development files for %{name}
 Group:		Development/X11
@@ -267,6 +335,7 @@ Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
+Requires:	%{libamdgpu} = %{version}
 %ifarch %{armx}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
@@ -274,23 +343,6 @@ Requires:	%{libomap} = %{version}
 Requires:	%{libetnaviv} = %{version}
 Requires:	%{libtegra} = %{version}
 %endif
-
-%if %{with uclibc}
-Requires:	uclibc-%{libname} = %{version}
-Requires:	uclibc-%{libkms} = %{version}
-%ifarch %{ix86} x86_64
-Requires:	uclibc-%{libintel} = %{version}
-%endif
-Requires:	uclibc-%{libnouveau} = %{version}
-Requires:	uclibc-%{libradeon} = %{version}
-%ifarch %{armx}
-Requires:	uclibc-%{libexynos} = %{version}
-Requires:	uclibc-%{libfreedreno} = %{version}
-Requires:	uclibc-%{libomap} = %{version}
-Requires:	uclibc-%{libetnaviv} = %{version}
-%endif
-%endif
-
 Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{_lib}drm-static-devel
 
@@ -407,9 +459,19 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libradeon}
 %{_libdir}/libdrm_radeon.so.%{radeon_major}*
 
+%files -n %{libamdgpu}
+%{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
+
 %if %{with uclibc}
 %files -n uclibc-%{libradeon}
 %{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
+
+%files -n uclibc-%{libamdgpu}
+%{uclibc_root}%{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
+
+%files -n uclibc-%{devname}
+%{uclibc_root}%{_libdir}/libdrm*.so
+%{uclibc_root}%{_libdir}/libkms.so
 %endif
 
 %ifarch %{armx}
@@ -457,10 +519,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %endif
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
-%if %{with uclibc}
-%{uclibc_root}%{_libdir}/libdrm*.so
-%{uclibc_root}%{_libdir}/libkms.so
-%endif
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
 %{_mandir}/man3/*
