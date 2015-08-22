@@ -68,8 +68,6 @@ BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	valgrind-devel
 %if %{with uclibc}
 BuildRequires:	uClibc-devel
-BuildRequires:	uclibc-udev-devel
-BuildRequires:	uclibc-libpciaccess-devel
 %endif
 
 %description
