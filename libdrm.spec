@@ -32,7 +32,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.63
+Version:	2.4.64
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
@@ -46,11 +46,13 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 Patch4:		libdrm-2.4.60-no-bc.patch
 # make rule to print the list of test programs
 #Patch5:		libdrm-2.4.61-check-programs.patch
+%ifarch %{armx}
 Patch6:		drm-update-arm.patch
 # format patch from
 # https://github.com/austriancoder/libdrm.git
 # git format-patch $HASH --stdout > 0001-add-etnaviv.patch
 Patch7:		0001-add-etnaviv.patch
+%endif
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
