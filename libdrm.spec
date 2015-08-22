@@ -12,6 +12,9 @@
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
+# amdgpu
+%define amdgpu_major 1
+%define libamdgpu %mklibname drm_amdgpu %{amdgpu_major}
 # exynos
 %define exynos_major 1
 %define libexynos %mklibname drm_exynos %{exynos_major}
@@ -162,6 +165,23 @@ Group:		System/Libraries
 Shared library for Radeon kernel Direct Rendering Manager services.
 %endif
 
+%package -n	%{libamdgpu}
+Summary:	Shared library for AMD GPU kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libamdgpu}
+Shared library for AMD GPU kernel Direct Rendering Manager services.
+
+%if %{with uclibc}
+%package -n	uclibc-%{libamdgpu}
+Summary:	Shared library for AMD GPU kernel DRM services (uClibc build)
+Group:		System/Libraries
+
+%description -n uclibc-%{libamdgpu}
+Shared library for AMD GPU kernel Direct Rendering Manager services.
+%endif
+
 # ARM stuff
 %ifarch %{armx}
 
@@ -275,6 +295,7 @@ Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
+Requires:	%{libamdgpu} = %{version}
 %ifarch %{armx}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
@@ -290,6 +311,7 @@ Requires:	uclibc-%{libintel} = %{version}
 %endif
 Requires:	uclibc-%{libnouveau} = %{version}
 Requires:	uclibc-%{libradeon} = %{version}
+Requires:	uclibc-%{libamdgpu} = %{version}
 %ifarch %{armx}
 Requires:	uclibc-%{libexynos} = %{version}
 Requires:	uclibc-%{libfreedreno} = %{version}
@@ -313,6 +335,7 @@ Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
+Requires:	%{libamdgpu} = %{version}
 %ifarch %{armx}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
@@ -436,9 +459,15 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libradeon}
 %{_libdir}/libdrm_radeon.so.%{radeon_major}*
 
+%files -n %{libamdgpu}
+%{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
+
 %if %{with uclibc}
 %files -n uclibc-%{libradeon}
 %{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
+
+%files -n uclibc-%{libamdgpu}
+%{uclibc_root}%{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
 
 %files -n uclibc-%{devname}
 %{uclibc_root}%{_libdir}/libdrm*.so
