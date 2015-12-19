@@ -33,7 +33,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.65
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -43,7 +43,7 @@ Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
 # remove backwards compat not needed on Fedora
-Patch4:		libdrm-2.4.60-no-bc.patch
+Patch4:		libdrm-2.4.0-no-bc.patch
 Patch6:		drm-update-arm.patch
 
 # For building man pages
