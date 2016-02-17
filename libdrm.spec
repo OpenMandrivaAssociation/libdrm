@@ -28,11 +28,9 @@
 %define tegra_major 0
 %define libtegra %mklibname drm_tegra %{tegra_major}
 
-%bcond_with	uclibc
-
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.66
+Version:	2.4.67
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
@@ -54,11 +52,6 @@ BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
-%if %{with uclibc}
-BuildRequires:	uClibc-devel
-BuildRequires:	uclibc-udev-devel
-BuildRequires:	uclibc-libpciaccess-devel
-%endif
 
 %description
 Userspace interface to kernel DRM services.
@@ -76,31 +69,12 @@ Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires:	%{name}-common
 
-%if %{with uclibc}
-%package -n	uclibc-%{libname}
-Summary:	Userspace interface to kernel DRM services (uClibc build)
-Group:		System/Libraries
-Requires:	%{name}-common
-
-%description -n	uclibc-%{libname}
-Userspace interface to kernel DRM services.
-%endif
-
 %package -n	%{libkms}
 Summary:	Shared library for KMS
 Group:		System/Libraries
 
 %description -n	%{libkms}
 Shared library for kernel mode setting.
-
-%if %{with uclibc}
-%package -n	uclibc-%{libkms}
-Summary:	Shared library for KMS (uClibc build)
-Group:		System/Libraries
-
-%description -n	uclibc-%{libkms}
-Shared library for kernel mode setting.
-%endif
 
 %ifarch %{ix86} x86_64
 %package -n	%{libintel}
@@ -109,15 +83,6 @@ Group:		System/Libraries
 
 %description -n	%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
-
-%if %{with uclibc}
-%package -n	uclibc-%{libintel}
-Summary:	Shared library for Intel kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n	uclibc-%{libintel}
-Shared library for Intel kernel Direct Rendering Manager services.
-%endif
 %endif
 
 %package -n	%{libnouveau}
@@ -127,15 +92,6 @@ Group:		System/Libraries
 %description -n	%{libnouveau}
 Shared library for Nouveau kernel Direct Rendering Manager services.
 
-%if %{with uclibc}
-%package -n	uclibc-%{libnouveau}
-Summary:	Shared library for Nouveau kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n	uclibc-%{libnouveau}
-Shared library for Nouveau kernel Direct Rendering Manager services.
-%endif
-
 %package -n	%{libradeon}
 Summary:	Shared library for Radeon kernel DRM services
 Group:		System/Libraries
@@ -144,15 +100,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
-%if %{with uclibc}
-%package -n	uclibc-%{libradeon}
-Summary:	Shared library for Radeon kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n uclibc-%{libradeon}
-Shared library for Radeon kernel Direct Rendering Manager services.
-%endif
-
 %package -n	%{libamdgpu}
 Summary:	Shared library for AMD GPU kernel DRM services
 Group:		System/Libraries
@@ -160,15 +107,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libamdgpu}
 Shared library for AMD GPU kernel Direct Rendering Manager services.
-
-%if %{with uclibc}
-%package -n	uclibc-%{libamdgpu}
-Summary:	Shared library for AMD GPU kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n uclibc-%{libamdgpu}
-Shared library for AMD GPU kernel Direct Rendering Manager services.
-%endif
 
 # ARM stuff
 %ifarch %{armx}
@@ -184,15 +122,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libexynos}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
-%if %{with uclibc}
-%package -n	uclibc-%{libexynos}
-Summary:	Shared library for Exynos kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n uclibc-%{libexynos}
-Shared library for Exynos kernel Direct Rendering Manager services.
-%endif
-
 #
 #Free Adreno
 #
@@ -202,15 +131,6 @@ Group:		System/Libraries
 
 %description -n %{libfreedreno}
 Shared library for Adreno kernel Direct Rendering Manager services.
-
-%if %{with uclibc}
-%package -n	uclibc-%{libfreedreno}
-Summary:	Shared library for Adreno kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n uclibc-%{libfreedreno}
-Shared library for Adreno kernel Direct Rendering Manager services.
-%endif
 
 #
 #Omap
@@ -223,17 +143,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libomap}
 Shared library for OMAP kernel Direct Rendering Manager services.
 
-%if %{with uclibc}
-%package -n	uclibc-%{libomap}
-Summary:	Shared library for OMAP kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n uclibc-%{libomap}
-Shared library for OMAP kernel Direct Rendering Manager services.
-%endif
-
-#
-%endif
 #
 #tegra
 #
@@ -244,54 +153,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libtegra}
 Shared library for Tegra kernel Direct Rendering Manager services.
-
-%if %{with uclibc}
-%package -n	uclibc-%{libtegra}
-Summary:	Shared library for Tegra kernel DRM services (uClibc build)
-Group:		System/Libraries
-
-%description -n uclibc-%{libtegra}
-Shared library for Tegra kernel Direct Rendering Manager services.
-%endif
-
-%if %{with uclibc}
-%package -n	uclibc-%{devname}
-Summary:	Development files for %{name}
-Group:		Development/X11
-Requires:	%{libname} = %{version}
-Requires:	%{libkms} = %{version}
-%ifarch %{ix86} x86_64
-Requires:	%{libintel} = %{version}
-%endif
-Requires:	%{libnouveau} = %{version}
-Requires:	%{libradeon} = %{version}
-Requires:	%{libamdgpu} = %{version}
-%ifarch %{armx}
-Requires:	%{libexynos} = %{version}
-Requires:	%{libfreedreno} = %{version}
-Requires:	%{libomap} = %{version}
-Requires:	%{libtegra} = %{version}
-%endif
-
-Requires:	uclibc-%{libname} = %{version}
-Requires:	uclibc-%{libkms} = %{version}
-%ifarch %{ix86} x86_64
-Requires:	uclibc-%{libintel} = %{version}
-%endif
-Requires:	uclibc-%{libnouveau} = %{version}
-Requires:	uclibc-%{libradeon} = %{version}
-Requires:	uclibc-%{libamdgpu} = %{version}
-%ifarch %{armx}
-Requires:	uclibc-%{libexynos} = %{version}
-Requires:	uclibc-%{libfreedreno} = %{version}
-Requires:	uclibc-%{libomap} = %{version}
-%endif
-Provides:	uclibc-%{name}-devel = %{version}-%{release}
-Conflicts:	%{devname} < 2.4.61-2
-
-%description -n	uclibc-%{devname}
-Development files for uclibc-%{name}.
-%endif
 
 %package -n	%{devname}
 Summary:	Development files for %{name}
@@ -330,33 +191,6 @@ prog %{name} = {
 autoreconf -fv --install
 
 %build
-export CONFIGURE_TOP="$PWD"
-%if %{with uclibc}
-mkdir -p uclibc
-pushd uclibc
-%uclibc_configure \
-	--enable-shared \
-	--disable-static \
-	--disable-manpages \
-	--enable-udev \
-%ifnarch %{ix86} x86_64
-	--disable-intel \
-%endif
-%ifarch %{armx}
-	--enable-exynos-experimental-api \
-	--enable-freedreno-experimental-api \
-	--enable-omap-experimental-api \
-	--enable-tegra-experimental-api \
-%endif
-	--enable-udev
-
-%make
-
-popd
-%endif
-
-mkdir -p system
-pushd system
 %configure \
 	--enable-udev \
 %ifnarch %{ix86} x86_64
@@ -373,10 +207,6 @@ pushd system
 %make
 
 %install
-%if %{with uclibc}
-%makeinstall_std -C uclibc
-rm -r %{buildroot}%{uclibc_root}%{_libdir}/pkgconfig
-%endif
 %makeinstall_std -C system
 
 install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
@@ -390,54 +220,22 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libname}
 %{_libdir}/libdrm.so.%{major}*
 
-%if %{with uclibc}
-%files -n uclibc-%{libname}
-%{uclibc_root}%{_libdir}/libdrm.so.%{major}*
-%endif
-
 %files -n %{libkms}
 %{_libdir}/libkms.so.%{kms_major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libkms}
-%{uclibc_root}%{_libdir}/libkms.so.%{kms_major}*
-%endif
 
 %ifarch %{ix86} x86_64
 %files -n %{libintel}
 %{_libdir}/libdrm_intel.so.%{intel_major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libintel}
-%{uclibc_root}%{_libdir}/libdrm_intel.so.%{intel_major}*
-%endif
 %endif
 
 %files -n %{libnouveau}
 %{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libnouveau}
-%{uclibc_root}%{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
-%endif
 
 %files -n %{libradeon}
 %{_libdir}/libdrm_radeon.so.%{radeon_major}*
 
 %files -n %{libamdgpu}
 %{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libradeon}
-%{uclibc_root}%{_libdir}/libdrm_radeon.so.%{radeon_major}*
-
-%files -n uclibc-%{libamdgpu}
-%{uclibc_root}%{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
-
-%files -n uclibc-%{devname}
-%{uclibc_root}%{_libdir}/libdrm*.so
-%{uclibc_root}%{_libdir}/libkms.so
-%endif
 
 %ifarch %{armx}
 %files -n %{libexynos}
@@ -451,20 +249,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libtegra}
 %{_libdir}/libdrm_tegra.so.%{tegra_major}*
-
-%if %{with uclibc}
-%files -n uclibc-%{libexynos}
-%{uclibc_root}%{_libdir}/libdrm_exynos.so.%{exynos_major}*
-
-%files -n uclibc-%{libomap}
-%{uclibc_root}%{_libdir}/libdrm_omap.so.%{omap_major}*
-
-%files -n uclibc-%{libfreedreno}
-%{uclibc_root}%{_libdir}/libdrm_freedreno.so.%{freedreno_major}*
-
-%files -n uclibc-%{libtegra}
-%{uclibc_root}%{_libdir}/libdrm_tegra.so.%{tegra_major}*
-%endif
 %endif
 
 %files -n %{devname}
