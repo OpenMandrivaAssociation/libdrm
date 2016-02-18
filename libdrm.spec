@@ -153,6 +153,7 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libtegra}
 Shared library for Tegra kernel Direct Rendering Manager services.
+%endif
 
 %package -n	%{devname}
 Summary:	Development files for %{name}
