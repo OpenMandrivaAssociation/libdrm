@@ -208,7 +208,7 @@ autoreconf -fv --install
 %make
 
 %install
-%makeinstall_std -C system
+%makeinstall_std
 
 install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
