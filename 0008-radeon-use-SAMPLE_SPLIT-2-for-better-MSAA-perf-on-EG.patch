@@ -1,0 +1,31 @@
+From 625d1810ad1f61dd4f4b2b2ee7e5cc67e1fdc2f1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Marek=20Ol=C5=A1=C3=A1k?= <marek.olsak@amd.com>
+Date: Thu, 26 May 2016 14:33:12 +0200
+Subject: [PATCH 08/10] radeon: use SAMPLE_SPLIT=2 for better MSAA perf on
+ EG/CM
+
+Reviewed-by: Alex Deucher <alexander.deucher@amd.com>
+---
+ radeon/radeon_surface.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/radeon/radeon_surface.c b/radeon/radeon_surface.c
+index 5ec9745..1424660 100644
+--- a/radeon/radeon_surface.c
++++ b/radeon/radeon_surface.c
+@@ -957,8 +957,10 @@ static int eg_surface_best(struct radeon_surface_manager *surf_man,
+             }
+             surf->stencil_tile_split = 64;
+         } else {
+-            /* tile split must be >= 256 for colorbuffer surfaces */
+-            surf->tile_split = MAX2(surf->nsamples * surf->bpe * 64, 256);
++            /* tile split must be >= 256 for colorbuffer surfaces,
++             * SAMPLE_SPLIT = tile_split / (bpe * 64), the optimal value is 2
++             */
++            surf->tile_split = MAX2(2 * surf->bpe * 64, 256);
+             if (surf->tile_split > 4096)
+                 surf->tile_split = 4096;
+         }
+-- 
+2.8.3
+

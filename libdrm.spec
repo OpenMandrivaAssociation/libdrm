@@ -31,7 +31,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.68
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -43,6 +43,19 @@ Patch3:		libdrm-make-dri-perms-okay.patch
 # remove backwards compat not needed on Fedora
 Patch4:		libdrm-2.4.0-no-bc.patch
 Patch6:		drm-update-arm.patch
+
+# (tpg) patches from upstream git
+Patch50:	0000-tests-amdgpu-expand-write-copy-tests-to-compute.patch
+Patch51:	0001-tests-amdgpu-expand-write-copy-tests-to-compute.patch
+Patch52:	0002-tests-amdgpu-add-interface-to-adapt-firmware-require.patch
+Patch53:	0003-tests-amdgpu-adapt-to-new-polaris10-11-uvd-fw.patch
+Patch54:	0004-amdgpu-fix-fence-status-query.patch
+Patch55:	0005-drm-fix-multi-GPU-drmGetDevices-only-return-one-devi.patch
+Patch56:	0006-xf86drm-ensure-proper-alignment-of-pointers-in-drmPr.patch
+Patch57:	0007-freedreno-msm-fix-memory-leak-on-ringbuffer-free.patch
+Patch58:	0008-radeon-use-SAMPLE_SPLIT-2-for-better-MSAA-perf-on-EG.patch
+Patch59:	0009-intel-Add-more-Kabylake-PCI-IDs.patch
+Patch60:	0010-intel-Removing-PCI-IDs-that-are-no-longer-listed-as-.patch
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
