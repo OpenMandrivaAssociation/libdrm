@@ -308,7 +308,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_includedir}/exynos/
 %{_includedir}/freedreno/
 %{_includedir}/omap/
-%{_includedir}/etnaviv/
 %endif
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
