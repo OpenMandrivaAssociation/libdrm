@@ -15,6 +15,8 @@
 # amdgpu
 %define amdgpu_major 1
 %define libamdgpu %mklibname drm_amdgpu %{amdgpu_major}
+
+%ifarch %{armx}
 # exynos
 %define exynos_major 1
 %define libexynos %mklibname drm_exynos %{exynos_major}
@@ -27,10 +29,17 @@
 # tegra
 %define tegra_major 0
 %define libtegra %mklibname drm_tegra %{tegra_major}
+# vc4
+%define vc4_major 0
+%define libvc4 %mklibname drm_vc4 %{vc4_major}
+# etnaviv
+%define etnaviv_major 1
+%define libetnaviv %mklibname drm_etnaviv %{etnaviv_major}
+%endif
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.70
+Version:	2.4.71
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
@@ -153,6 +162,31 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libtegra}
 Shared library for Tegra kernel Direct Rendering Manager services.
+
+%if 0
+# For now (2.4.70), VC4 is just a set of headers - no binary built
+#
+#vc4
+#
+%package -n	%{libvc4}
+Summary:	Shared library for Broadcom VC4 kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libvc4}
+Shared library for Broadcom VC4 kernel Direct Rendering Manager services.
+%endif
+
+#
+#etnaviv
+#
+%package -n	%{libetnaviv}
+Summary:	Shared library for Etnaviv kernel DRM services
+Group:		System/Libraries
+Conflicts:	%{_lib}drm2 < 2.4.5-2
+
+%description -n %{libetnaviv}
+Shared library for Etnaviv kernel Direct Rendering Manager services.
 %endif
 
 %package -n	%{devname}
@@ -171,6 +205,10 @@ Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
 Requires:	%{libomap} = %{version}
 Requires:	%{libtegra} = %{version}
+Requires:	%{libetnaviv} = %{version}
+%if 0
+Requires:	%{libvc4} = %{version}
+%endif
 %endif
 Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{_lib}drm-static-devel
@@ -202,6 +240,8 @@ autoreconf -fv --install
 	--enable-freedreno-experimental-api \
 	--enable-tegra-experimental-api \
 	--enable-omap-experimental-api \
+	--enable-etnaviv-experimental-api \
+	--enable-vc4 \
 %endif
 	--enable-udev
 
@@ -250,6 +290,14 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libtegra}
 %{_libdir}/libdrm_tegra.so.%{tegra_major}*
+
+%files -n %{libetnaviv}
+%{_libdir}/libdrm_etnaviv.so.%{etnaviv_major}*
+
+%if 0
+%files -n %{libvc4}
+%{_libdir}/libdrm_vc4.so.%{vc4_major}*
+%endif
 %endif
 
 %files -n %{devname}
