@@ -33,7 +33,7 @@
 %define vc4_major 0
 %define libvc4 %mklibname drm_vc4 %{vc4_major}
 # etnaviv
-%define etnaviv_major 0
+%define etnaviv_major 1
 %define libetnaviv %mklibname drm_etnaviv %{etnaviv_major}
 %endif
 
