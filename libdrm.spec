@@ -256,6 +256,8 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 # and we should perhaps do the same? (previous attempts have not gone well :)
 
 %files common
+%dir %{_datadir}/%{name}
+%{_datadir}/%{name}/*.ids
 /lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libname}
