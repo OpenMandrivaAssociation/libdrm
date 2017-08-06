@@ -245,7 +245,7 @@ autoreconf -fv --install
 %endif
 	--enable-udev
 
-%make
+%make CFLAGS="%{optflags} -DMAJOR_IN_SYSMACROS"
 
 %install
 %makeinstall_std
