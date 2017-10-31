@@ -39,7 +39,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.85
+Version:	2.4.87
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
