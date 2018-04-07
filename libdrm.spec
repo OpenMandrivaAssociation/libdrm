@@ -78,6 +78,9 @@ Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires:	%{name}-common
 
+%description -n	%{libname}
+Userspace interface to kernel DRM services
+
 %package -n	%{libkms}
 Summary:	Shared library for KMS
 Group:		System/Libraries
