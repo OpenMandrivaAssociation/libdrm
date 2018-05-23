@@ -223,8 +223,7 @@ Development files for %{name}.
 %apply_patches
 
 %build
-%meson
-%meson_build \
+%meson \
 %ifarch %{armx}
     -Dintel=false \
     -Dradeon=false \
@@ -238,6 +237,8 @@ Development files for %{name}.
 %endif
     -Dvc4=false \
     -Dlibkms=true
+
+%meson_build
 
 %install
 %meson_install
