@@ -4,7 +4,6 @@
 
 %define kms_major 1
 %define libkms %mklibname kms %{kms_major}
-%ifnarch %{armx}
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
 %define nouveau_major 2
@@ -14,9 +13,7 @@
 # amdgpu
 %define amdgpu_major 1
 %define libamdgpu %mklibname drm_amdgpu %{amdgpu_major}
-%endif
 
-%ifarch %{armx}
 # exynos
 %define exynos_major 1
 %define libexynos %mklibname drm_exynos %{exynos_major}
@@ -35,12 +32,11 @@
 # etnaviv
 %define etnaviv_major 1
 %define libetnaviv %mklibname drm_etnaviv %{etnaviv_major}
-%endif
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.92
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -88,7 +84,6 @@ Group:		System/Libraries
 %description -n	%{libkms}
 Shared library for kernel mode setting.
 
-%ifarch %{ix86} x86_64
 %package -n	%{libintel}
 Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
@@ -118,10 +113,8 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libamdgpu}
 Shared library for AMD GPU kernel Direct Rendering Manager services.
-%endif
 
 # ARM stuff
-%ifarch %{armx}
 
 #
 #Samsung Exynos video
@@ -166,7 +159,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libtegra}
 Shared library for Tegra kernel Direct Rendering Manager services.
 
-%if 0
 # For now (2.4.70), VC4 is just a set of headers - no binary built
 #
 #vc4
@@ -178,7 +170,6 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libvc4}
 Shared library for Broadcom VC4 kernel Direct Rendering Manager services.
-%endif
 
 #
 #etnaviv
@@ -190,19 +181,18 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libetnaviv}
 Shared library for Etnaviv kernel Direct Rendering Manager services.
-%endif
 
 %package -n	%{devname}
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
 Requires:	%{libkms} = %{version}
-%ifnarch %{armx}
+%ifarch %{ix86} x86_64
 Requires:	%{libintel} = %{version}
+%endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
 Requires:	%{libamdgpu} = %{version}
-%endif
 %ifarch %{armx}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
@@ -225,19 +215,30 @@ Development files for %{name}.
 
 %build
 %meson \
-%ifarch %{armx}
-    -Dintel=false \
-    -Dradeon=false \
-    -Damdgpu=false \
-    -Dnouveau=false \
-    -Domap=true \
-    -Dexynos=true \
-    -Dfreedreno=true \
-    -Dtegra=true \
-    -Detnaviv=true \
+%ifarch %{ix86} x86_64
+	-Dintel=true \
+%else
+	-Dintel=false \
 %endif
-    -Dvc4=false \
-    -Dlibkms=true
+%ifarch %{armx}
+	-Domap=true \
+	-Dexynos=true \
+	-Dfreedreno=true \
+	-Dtegra=true \
+	-Detnaviv=true \
+	-Dvc4=true \
+%else
+	-Domap=false \
+	-Dexynos=false \
+	-Dfreedreno=false \
+	-Dtegra=false \
+	-Detnaviv=false \
+	-Dvc4=false \
+%endif
+	-Dradeon=true \
+	-Damdgpu=true \
+	-Dnouveau=true \
+	-Dlibkms=true
 
 %meson_build
 
@@ -247,10 +248,8 @@ Development files for %{name}.
 install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files common
-%ifnarch %{armx}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.ids
-%endif
 /lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libname}
@@ -259,9 +258,10 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libkms}
 %{_libdir}/libkms.so.%{kms_major}*
 
-%ifnarch %{armx}
+%ifarch %{ix86} x86_64
 %files -n %{libintel}
 %{_libdir}/libdrm_intel.so.%{intel_major}*
+%endif
 
 %files -n %{libnouveau}
 %{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
@@ -271,7 +271,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libamdgpu}
 %{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
-%endif
 
 %ifarch %{armx}
 %files -n %{libexynos}
@@ -289,6 +288,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libetnaviv}
 %{_libdir}/libdrm_etnaviv.so.%{etnaviv_major}*
 
+# No binary yet, but the headers are useful
 %if 0
 %files -n %{libvc4}
 %{_libdir}/libdrm_vc4.so.%{vc4_major}*
