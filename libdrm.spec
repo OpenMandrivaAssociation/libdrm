@@ -46,17 +46,16 @@ License:	MIT/X11
 Url:		http://dri.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1:	91-drm-modeset.rules
-# Backports from git:
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
 Patch6:		drm-update-arm.patch
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
+BuildRequires:	docbook-dtd42-xml
 BuildRequires:	xsltproc
 BuildRequires:	kernel-headers
 BuildRequires:	pkgconfig(pthread-stubs)
-BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	pkgconfig(atomic_ops)
@@ -68,6 +67,7 @@ Userspace interface to kernel DRM services.
 %package	common
 Summary:	Common files for the userspace interface to kernel DRM services
 Group:		System/Libraries
+Requires:	coreutils
 
 %description	common
 Common files for the userspace interface to kernel DRM services.
