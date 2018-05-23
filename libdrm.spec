@@ -59,6 +59,7 @@ BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
+BuildRequires:	pkgconfig(atomic_ops)
 BuildRequires:	meson
 
 %description
@@ -246,8 +247,10 @@ Development files for %{name}.
 install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files common
+%ifnarch %{armx}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.ids
+%endif
 /lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libname}
