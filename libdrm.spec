@@ -4,10 +4,9 @@
 
 %define kms_major 1
 %define libkms %mklibname kms %{kms_major}
-%ifarch %{ix86} x86_64
+%ifnarch %{armx}
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
-%endif
 %define nouveau_major 2
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
 %define radeon_major 1
@@ -15,6 +14,7 @@
 # amdgpu
 %define amdgpu_major 1
 %define libamdgpu %mklibname drm_amdgpu %{amdgpu_major}
+%endif
 
 %ifarch %{armx}
 # exynos
@@ -39,28 +39,27 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.91
+Version:	2.4.92
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
 Source1:	91-drm-modeset.rules
-# Backports from git:
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
-# remove backwards compat not needed on Fedora
-#Patch4:		libdrm-2.4.0-no-bc.patch
 Patch6:		drm-update-arm.patch
 
 # For building man pages
 BuildRequires:	docbook-style-xsl
+BuildRequires:	docbook-dtd42-xml
 BuildRequires:	xsltproc
 BuildRequires:	kernel-headers
 BuildRequires:	pkgconfig(pthread-stubs)
-BuildRequires:	pkgconfig(udev)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
+BuildRequires:	pkgconfig(atomic_ops)
+BuildRequires:	meson
 
 %description
 Userspace interface to kernel DRM services.
@@ -68,6 +67,7 @@ Userspace interface to kernel DRM services.
 %package	common
 Summary:	Common files for the userspace interface to kernel DRM services
 Group:		System/Libraries
+Requires:	coreutils
 
 %description	common
 Common files for the userspace interface to kernel DRM services.
@@ -77,6 +77,9 @@ Summary:	Userspace interface to kernel DRM services
 Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires:	%{name}-common
+
+%description -n	%{libname}
+Userspace interface to kernel DRM services
 
 %package -n	%{libkms}
 Summary:	Shared library for KMS
@@ -92,7 +95,6 @@ Group:		System/Libraries
 
 %description -n	%{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
-%endif
 
 %package -n	%{libnouveau}
 Summary:	Shared library for Nouveau kernel DRM services
@@ -116,6 +118,7 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libamdgpu}
 Shared library for AMD GPU kernel Direct Rendering Manager services.
+%endif
 
 # ARM stuff
 %ifarch %{armx}
@@ -194,12 +197,12 @@ Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
 Requires:	%{libkms} = %{version}
-%ifarch %{ix86} x86_64
+%ifnarch %{armx}
 Requires:	%{libintel} = %{version}
-%endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
 Requires:	%{libamdgpu} = %{version}
+%endif
 %ifarch %{armx}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
@@ -216,48 +219,38 @@ Obsoletes:	%{_lib}drm-static-devel
 %description -n	%{devname}
 Development files for %{name}.
 
-%track
-prog %{name} = {
-	url = http://dri.freedesktop.org/libdrm/
-	regex = %{name}-(__VER__)\.tar\.bz2
-	version = %{version}
-}
-
 %prep
 %setup -q
 %apply_patches
-# Needed for patch4
-autoreconf -fv --install
 
 %build
-%configure \
-	--enable-udev \
-%ifnarch %{ix86} x86_64
-	--disable-intel \
-%endif
+%meson \
 %ifarch %{armx}
-	--enable-exynos-experimental-api \
-	--enable-freedreno-experimental-api \
-	--enable-tegra-experimental-api \
-	--enable-omap-experimental-api \
-	--enable-etnaviv-experimental-api \
-	--enable-vc4 \
+    -Dintel=false \
+    -Dradeon=false \
+    -Damdgpu=false \
+    -Dnouveau=false \
+    -Domap=true \
+    -Dexynos=true \
+    -Dfreedreno=true \
+    -Dtegra=true \
+    -Detnaviv=true \
 %endif
-	--enable-udev
+    -Dvc4=false \
+    -Dlibkms=true
 
-%make CFLAGS="%{optflags} -DMAJOR_IN_SYSMACROS"
+%meson_build
 
 %install
-%makeinstall_std
+%meson_install
 
 install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
-# (cg) Note that RH remove drm.h drm_mode.h drm_sarea.h r300_reg.h via_3d_reg.h
-# and we should perhaps do the same? (previous attempts have not gone well :)
-
 %files common
+%ifnarch %{armx}
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.ids
+%endif
 /lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libname}
@@ -266,10 +259,9 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libkms}
 %{_libdir}/libkms.so.%{kms_major}*
 
-%ifarch %{ix86} x86_64
+%ifnarch %{armx}
 %files -n %{libintel}
 %{_libdir}/libdrm_intel.so.%{intel_major}*
-%endif
 
 %files -n %{libnouveau}
 %{_libdir}/libdrm_nouveau.so.%{nouveau_major}*
@@ -279,6 +271,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libamdgpu}
 %{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
+%endif
 
 %ifarch %{armx}
 %files -n %{libexynos}
