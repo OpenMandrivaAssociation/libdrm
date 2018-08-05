@@ -187,7 +187,7 @@ Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
 Requires:	%{libkms} = %{version}
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} %{x86_64}
 Requires:	%{libintel} = %{version}
 %endif
 Requires:	%{libnouveau} = %{version}
@@ -215,7 +215,7 @@ Development files for %{name}.
 
 %build
 %meson \
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} %{x86_64}
 	-Dintel=true \
 %else
 	-Dintel=false \
@@ -258,7 +258,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libkms}
 %{_libdir}/libkms.so.%{kms_major}*
 
-%ifarch %{ix86} x86_64
+%ifarch %{ix86} %{x86_64}
 %files -n %{libintel}
 %{_libdir}/libdrm_intel.so.%{intel_major}*
 %endif
