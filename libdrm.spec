@@ -52,7 +52,7 @@ Patch6:		drm-update-arm.patch
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd42-xml
 BuildRequires:	xsltproc
-BuildRequires:	kernel-headers
+BuildRequires:	kernel-release-headers
 BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
