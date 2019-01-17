@@ -33,10 +33,12 @@
 %define etnaviv_major 1
 %define libetnaviv %mklibname drm_etnaviv %{etnaviv_major}
 
+%global optflags %{optflags} -O3
+
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.96
-Release:	2
+Release:	3
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -210,8 +212,7 @@ Obsoletes:	%{_lib}drm-static-devel
 Development files for %{name}.
 
 %prep
-%setup -q
-%apply_patches
+%autosetup -p1
 
 %build
 %meson \
