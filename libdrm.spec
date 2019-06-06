@@ -195,7 +195,7 @@ Requires:	%{libintel} = %{version}
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
 Requires:	%{libamdgpu} = %{version}
-%ifarch %{armx}
+%ifarch %{armx} %{riscv}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
 Requires:	%{libomap} = %{version}
@@ -221,7 +221,7 @@ Development files for %{name}.
 %else
 	-Dintel=false \
 %endif
-%ifarch %{armx}
+%ifarch %{armx} %{riscv}
 	-Domap=true \
 	-Dexynos=true \
 	-Dfreedreno=true \
@@ -273,7 +273,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libamdgpu}
 %{_libdir}/libdrm_amdgpu.so.%{amdgpu_major}*
 
-%ifarch %{armx}
+%ifarch %{armx} %{riscv}
 %files -n %{libexynos}
 %{_libdir}/libdrm_exynos.so.%{exynos_major}*
 
@@ -300,7 +300,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_includedir}/libdrm
 %{_includedir}/libkms
 %{_includedir}/*.h
-%ifarch %{armx}
+%ifarch %{armx} %{riscv}
 %{_includedir}/exynos/
 %{_includedir}/freedreno/
 %{_includedir}/omap/
