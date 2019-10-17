@@ -37,8 +37,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.99
-Release:	2
+Version:	2.4.100
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -64,44 +64,44 @@ BuildRequires:	meson
 %description
 Userspace interface to kernel DRM services.
 
-%package	common
+%package common
 Summary:	Common files for the userspace interface to kernel DRM services
 Group:		System/Libraries
 
-%description	common
+%description common
 Common files for the userspace interface to kernel DRM services.
 
-%package -n	%{libname}
+%package -n %{libname}
 Summary:	Userspace interface to kernel DRM services
 Group:		System/Libraries
 Provides:	%{name} = %{version}
 Requires:	%{name}-common
 
-%description -n	%{libname}
+%description -n %{libname}
 Userspace interface to kernel DRM services
 
 %package -n	%{libkms}
 Summary:	Shared library for KMS
 Group:		System/Libraries
 
-%description -n	%{libkms}
+%description -n %{libkms}
 Shared library for kernel mode setting.
 
 %package -n	%{libintel}
 Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
 
-%description -n	%{libintel}
+%description -n %{libintel}
 Shared library for Intel kernel Direct Rendering Manager services.
 
-%package -n	%{libnouveau}
+%package -n %{libnouveau}
 Summary:	Shared library for Nouveau kernel DRM services
 Group:		System/Libraries
 
-%description -n	%{libnouveau}
+%description -n %{libnouveau}
 Shared library for Nouveau kernel Direct Rendering Manager services.
 
-%package -n	%{libradeon}
+%package -n %{libradeon}
 Summary:	Shared library for Radeon kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -122,7 +122,7 @@ Shared library for AMD GPU kernel Direct Rendering Manager services.
 #
 #Samsung Exynos video
 #
-%package -n	%{libexynos}
+%package -n %{libexynos}
 Summary:	Shared library for Exynos kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -133,7 +133,7 @@ Shared library for Radeon kernel Direct Rendering Manager services.
 #
 #Free Adreno
 #
-%package -n	%{libfreedreno}
+%package -n %{libfreedreno}
 Summary:	Shared library for Adreno kernel DRM services
 Group:		System/Libraries
 
@@ -143,7 +143,7 @@ Shared library for Adreno kernel Direct Rendering Manager services.
 #
 #Omap
 #
-%package -n	%{libomap}
+%package -n %{libomap}
 Summary:	Shared library for OMAP kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -154,7 +154,7 @@ Shared library for OMAP kernel Direct Rendering Manager services.
 #
 #tegra
 #
-%package -n	%{libtegra}
+%package -n %{libtegra}
 Summary:	Shared library for Tegra kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -166,7 +166,7 @@ Shared library for Tegra kernel Direct Rendering Manager services.
 #
 #vc4
 #
-%package -n	%{libvc4}
+%package -n %{libvc4}
 Summary:	Shared library for Broadcom VC4 kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -177,7 +177,7 @@ Shared library for Broadcom VC4 kernel Direct Rendering Manager services.
 #
 #etnaviv
 #
-%package -n	%{libetnaviv}
+%package -n %{libetnaviv}
 Summary:	Shared library for Etnaviv kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -185,7 +185,7 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libetnaviv}
 Shared library for Etnaviv kernel Direct Rendering Manager services.
 
-%package -n	%{devname}
+%package -n %{devname}
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
