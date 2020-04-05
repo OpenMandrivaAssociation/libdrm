@@ -37,8 +37,8 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.100
-Release:	2
+Version:	2.4.101
+Release:	1
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -46,7 +46,7 @@ Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.xz
 Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
-Patch6:		drm-update-arm.patch
+#Patch6:		drm-update-arm.patch
 # (tpg) https://raw.githubusercontent.com/clearlinux-pkgs/libdrm/master/log2int.patch
 Patch7:		https://raw.githubusercontent.com/clearlinux-pkgs/libdrm/master/log2int.patch
 
