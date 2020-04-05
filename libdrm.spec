@@ -42,7 +42,7 @@ Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
-Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.bz2
+Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.xz
 Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		libdrm-make-dri-perms-okay.patch
