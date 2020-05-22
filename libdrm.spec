@@ -1,18 +1,32 @@
+# libdrm is used by wine and steam
+%ifarch %{x86_64}
+%bcond_without compat32
+%else
+%bcond_with compat32
+%endif
+
 %define major 2
 %define libname %mklibname drm %{major}
 %define devname %mklibname drm -d
+%define lib32name libdrm%{major}
+%define dev32name libdrm-devel
 
 %define kms_major 1
 %define libkms %mklibname kms %{kms_major}
+%define lib32kms libkms%{kms_major}
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
+%define lib32intel libdrm_intel%{intel_major}
 %define nouveau_major 2
 %define libnouveau %mklibname drm_nouveau %{nouveau_major}
+%define lib32nouveau libdrm_nouveau%{nouveau_major}
 %define radeon_major 1
 %define libradeon %mklibname drm_radeon %{radeon_major}
+%define lib32radeon libdrm_radeon%{radeon_major}
 # amdgpu
 %define amdgpu_major 1
 %define libamdgpu %mklibname drm_amdgpu %{amdgpu_major}
+%define lib32amdgpu libdrm_amdgpu%{amdgpu_major}
 
 # exynos
 %define exynos_major 1
@@ -38,7 +52,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.101
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -55,11 +69,14 @@ BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd42-xml
 BuildRequires:	xsltproc
 BuildRequires:	kernel-release-headers
-BuildRequires:	pkgconfig(pthread-stubs)
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	pkgconfig(atomic_ops)
 BuildRequires:	meson
+%if %{with compat32}
+BuildRequires:	devel(libatomic_ops)
+BuildRequires:	devel(libpciaccess)
+%endif
 
 %description
 Userspace interface to kernel DRM services.
@@ -74,7 +91,6 @@ Common files for the userspace interface to kernel DRM services.
 %package -n %{libname}
 Summary:	Userspace interface to kernel DRM services
 Group:		System/Libraries
-Provides:	%{name} = %{version}
 Requires:	%{name}-common
 
 %description -n %{libname}
@@ -116,6 +132,67 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libamdgpu}
 Shared library for AMD GPU kernel Direct Rendering Manager services.
+
+%if %{with compat32}
+%package -n %{lib32name}
+Summary:	Userspace interface to kernel DRM services (32-bit)
+Group:		System/Libraries
+Requires:	%{name}-common
+
+%description -n %{lib32name}
+Userspace interface to kernel DRM services
+
+%package -n	%{lib32kms}
+Summary:	Shared library for KMS (32-bit)
+Group:		System/Libraries
+
+%description -n %{lib32kms}
+Shared library for kernel mode setting.
+
+%package -n	%{lib32intel}
+Summary:	Shared library for Intel kernel DRM services (32-bit)
+Group:		System/Libraries
+
+%description -n %{lib32intel}
+Shared library for Intel kernel Direct Rendering Manager services.
+
+%package -n %{lib32nouveau}
+Summary:	Shared library for Nouveau kernel DRM services (32-bit)
+Group:		System/Libraries
+
+%description -n %{lib32nouveau}
+Shared library for Nouveau kernel Direct Rendering Manager services.
+
+%package -n %{lib32radeon}
+Summary:	Shared library for Radeon kernel DRM services (32-bit)
+Group:		System/Libraries
+
+%description -n %{lib32radeon}
+Shared library for Radeon kernel Direct Rendering Manager services.
+
+%package -n	%{lib32amdgpu}
+Summary:	Shared library for AMD GPU kernel DRM services (32-bit)
+Group:		System/Libraries
+
+%description -n %{lib32amdgpu}
+Shared library for AMD GPU kernel Direct Rendering Manager services.
+
+%package -n %{dev32name}
+Summary:	Development files for %{name}
+Group:		Development/X11
+Requires:	%{devname} = %{version}
+Requires:	%{lib32name} = %{version}
+Requires:	%{lib32kms} = %{version}
+%ifarch %{ix86} %{x86_64}
+Requires:	%{lib32intel} = %{version}
+%endif
+Requires:	%{lib32nouveau} = %{version}
+Requires:	%{lib32radeon} = %{version}
+Requires:	%{lib32amdgpu} = %{version}
+
+%description -n	%{dev32name}
+Development files for %{name}.
+%endif
 
 # ARM stuff
 
@@ -206,7 +283,6 @@ Requires:	%{libetnaviv} = %{version}
 Requires:	%{libvc4} = %{version}
 %endif
 %endif
-Provides:	%{name}-devel = %{version}-%{release}
 Obsoletes:	%{_lib}drm-static-devel
 
 %description -n	%{devname}
@@ -215,7 +291,26 @@ Development files for %{name}.
 %prep
 %autosetup -p1
 
-%build
+%if %{with compat32}
+%meson32 \
+%ifarch %{ix86} %{x86_64}
+	-Dintel=true \
+%else
+	-Dintel=false \
+%endif
+	-Domap=false \
+	-Dexynos=false \
+	-Dfreedreno=false \
+	-Dtegra=false \
+	-Detnaviv=false \
+	-Dvc4=false \
+	-Dradeon=true \
+	-Damdgpu=true \
+	-Dnouveau=true \
+	-Dlibkms=true \
+	-Dcairo-tests=false
+%endif
+
 %meson \
 %ifarch %{ix86} %{x86_64}
 	-Dintel=true \
@@ -242,9 +337,16 @@ Development files for %{name}.
 	-Dnouveau=true \
 	-Dlibkms=true
 
+%build
+%if %{with compat32}
+%ninja_build -C build32
+%endif
 %meson_build
 
 %install
+%if %{with compat32}
+%ninja_install -C build32
+%endif
 %meson_install
 
 install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
@@ -312,3 +414,29 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_libdir}/pkgconfig/libkms*.pc
 %{_mandir}/man3/*
 %{_mandir}/man7/*
+
+%if %{with compat32}
+%files -n %{lib32name}
+%{_prefix}/lib/libdrm.so.%{major}*
+
+%files -n %{lib32kms}
+%{_prefix}/lib/libkms.so.%{kms_major}*
+
+%files -n %{lib32intel}
+%{_prefix}/lib/libdrm_intel.so.%{intel_major}*
+
+%files -n %{lib32nouveau}
+%{_prefix}/lib/libdrm_nouveau.so.%{nouveau_major}*
+
+%files -n %{lib32radeon}
+%{_prefix}/lib/libdrm_radeon.so.%{radeon_major}*
+
+%files -n %{lib32amdgpu}
+%{_prefix}/lib/libdrm_amdgpu.so.%{amdgpu_major}*
+
+%files -n %{dev32name}
+%{_prefix}/lib/libdrm*.so
+%{_prefix}/lib/libkms.so
+%{_prefix}/lib/pkgconfig/libdrm*.pc
+%{_prefix}/lib/pkgconfig/libkms*.pc
+%endif
