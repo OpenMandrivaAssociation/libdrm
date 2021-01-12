@@ -409,8 +409,8 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-%{_mandir}/man3/*
-%{_mandir}/man7/*
+#{_mandir}/man3/*
+#{_mandir}/man7/*
 
 %if %{with compat32}
 %files -n %{lib32name}
