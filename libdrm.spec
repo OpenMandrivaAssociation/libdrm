@@ -51,7 +51,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.103
+Version:	2.4.104
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
@@ -409,8 +409,8 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-%{_mandir}/man3/*
-%{_mandir}/man7/*
+#{_mandir}/man3/*
+#{_mandir}/man7/*
 
 %if %{with compat32}
 %files -n %{lib32name}
