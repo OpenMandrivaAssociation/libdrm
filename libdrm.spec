@@ -52,7 +52,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.105
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -93,14 +93,14 @@ Requires:	%{name}-common
 %description -n %{libname}
 Userspace interface to kernel DRM services
 
-%package -n	%{libkms}
+%package -n %{libkms}
 Summary:	Shared library for KMS
 Group:		System/Libraries
 
 %description -n %{libkms}
 Shared library for kernel mode setting.
 
-%package -n	%{libintel}
+%package -n %{libintel}
 Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
 
@@ -122,7 +122,7 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 %description -n %{libradeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
-%package -n	%{libamdgpu}
+%package -n %{libamdgpu}
 Summary:	Shared library for AMD GPU kernel DRM services
 Group:		System/Libraries
 Conflicts:	%{_lib}drm2 < 2.4.5-2
@@ -139,14 +139,14 @@ Requires:	%{name}-common
 %description -n %{lib32name}
 Userspace interface to kernel DRM services
 
-%package -n	%{lib32kms}
+%package -n %{lib32kms}
 Summary:	Shared library for KMS (32-bit)
 Group:		System/Libraries
 
 %description -n %{lib32kms}
 Shared library for kernel mode setting.
 
-%package -n	%{lib32intel}
+%package -n %{lib32intel}
 Summary:	Shared library for Intel kernel DRM services (32-bit)
 Group:		System/Libraries
 
@@ -167,7 +167,7 @@ Group:		System/Libraries
 %description -n %{lib32radeon}
 Shared library for Radeon kernel Direct Rendering Manager services.
 
-%package -n	%{lib32amdgpu}
+%package -n %{lib32amdgpu}
 Summary:	Shared library for AMD GPU kernel DRM services (32-bit)
 Group:		System/Libraries
 
@@ -187,7 +187,7 @@ Requires:	%{lib32nouveau} = %{version}
 Requires:	%{lib32radeon} = %{version}
 Requires:	%{lib32amdgpu} = %{version}
 
-%description -n	%{dev32name}
+%description -n %{dev32name}
 Development files for %{name}.
 %endif
 
@@ -266,6 +266,7 @@ Requires:	%{libname} = %{version}
 Requires:	%{libkms} = %{version}
 %ifarch %{ix86} %{x86_64}
 Requires:	%{libintel} = %{version}
+Requires:	pkgconfig(pciaccess)
 %endif
 Requires:	%{libnouveau} = %{version}
 Requires:	%{libradeon} = %{version}
@@ -282,7 +283,7 @@ Requires:	%{libvc4} = %{version}
 %endif
 Obsoletes:	%{_lib}drm-static-devel
 
-%description -n	%{devname}
+%description -n %{devname}
 Development files for %{name}.
 
 %prep
