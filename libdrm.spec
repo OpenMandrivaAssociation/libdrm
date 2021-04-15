@@ -52,7 +52,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.105
-Release:	2
+Release:	3
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -182,6 +182,7 @@ Requires:	%{lib32name} = %{version}
 Requires:	%{lib32kms} = %{version}
 %ifarch %{ix86} %{x86_64}
 Requires:	%{lib32intel} = %{version}
+Requires:	devel(libpciaccess)
 %endif
 Requires:	%{lib32nouveau} = %{version}
 Requires:	%{lib32radeon} = %{version}
