@@ -52,15 +52,15 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.107
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
 Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.xz
 Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
-Patch3:		libdrm-make-dri-perms-okay.patch
-
+Patch3:		https://src.fedoraproject.org/rpms/libdrm/raw/rawhide/f/libdrm-make-dri-perms-okay.patch
+Patch4:		https://src.fedoraproject.org/rpms/libdrm/raw/rawhide/f/libdrm-2.4.0-no-bc.patch
 # For building man pages
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd42-xml
@@ -70,6 +70,7 @@ BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	pkgconfig(atomic_ops)
 BuildRequires:	meson
+BuildRequires:	systemd-rpm-macros
 %if %{with compat32}
 BuildRequires:	devel(libatomic_ops)
 BuildRequires:	devel(libpciaccess)
@@ -91,7 +92,7 @@ Group:		System/Libraries
 Requires:	%{name}-common
 
 %description -n %{libname}
-Userspace interface to kernel DRM services
+Userspace interface to kernel DRM services.
 
 %package -n %{libkms}
 Summary:	Shared library for KMS
@@ -137,7 +138,7 @@ Group:		System/Libraries
 Requires:	%{name}-common
 
 %description -n %{lib32name}
-Userspace interface to kernel DRM services
+Userspace interface to kernel DRM services.
 
 %package -n %{lib32kms}
 Summary:	Shared library for KMS (32-bit)
@@ -218,6 +219,7 @@ Shared library for Adreno kernel Direct Rendering Manager services.
 #
 #Omap
 #
+%ifarch %{arm}
 %package -n %{libomap}
 Summary:	Shared library for OMAP kernel DRM services
 Group:		System/Libraries
@@ -225,6 +227,7 @@ Conflicts:	%{_lib}drm2 < 2.4.5-2
 
 %description -n %{libomap}
 Shared library for OMAP kernel Direct Rendering Manager services.
+%endif
 
 #
 #tegra
@@ -275,12 +278,14 @@ Requires:	%{libamdgpu} = %{version}
 %ifarch %{armx} %{riscv}
 Requires:	%{libexynos} = %{version}
 Requires:	%{libfreedreno} = %{version}
-Requires:	%{libomap} = %{version}
 Requires:	%{libtegra} = %{version}
 Requires:	%{libetnaviv} = %{version}
 %if 0
 Requires:	%{libvc4} = %{version}
 %endif
+%endif
+%ifarch %{arm}
+Requires:	%{libomap} = %{version}
 %endif
 Obsoletes:	%{_lib}drm-static-devel
 
@@ -317,19 +322,22 @@ Development files for %{name}.
 	-Dintel=false \
 %endif
 %ifarch %{armx} %{riscv}
-	-Domap=true \
 	-Dexynos=true \
 	-Dfreedreno=true \
 	-Dtegra=true \
 	-Detnaviv=true \
 	-Dvc4=true \
 %else
-	-Domap=false \
 	-Dexynos=false \
 	-Dfreedreno=false \
 	-Dtegra=false \
 	-Detnaviv=false \
 	-Dvc4=false \
+%endif
+%ifarch %{arm}
+	-Domap=true \
+%else
+	-Domap=false \
 %endif
 	-Dradeon=true \
 	-Damdgpu=true \
@@ -353,7 +361,7 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files common
 %dir %{_datadir}/%{name}
 %{_datadir}/%{name}/*.ids
-/lib/udev/rules.d/91-drm-modeset.rules
+%{_udevrulesdir}/91-drm-modeset.rules
 
 %files -n %{libname}
 %{_libdir}/libdrm.so.%{major}*
@@ -382,9 +390,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %files -n %{libfreedreno}
 %{_libdir}/libdrm_freedreno.so.%{freedreno_major}*
 
-%files -n %{libomap}
-%{_libdir}/libdrm_omap.so.%{omap_major}*
-
 %files -n %{libtegra}
 %{_libdir}/libdrm_tegra.so.%{tegra_major}*
 
@@ -398,6 +403,11 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %endif
 %endif
 
+%ifarch %{arm}
+%files -n %{libomap}
+%{_libdir}/libdrm_omap.so.%{omap_major}*
+%endif
+
 %files -n %{devname}
 %{_includedir}/libdrm
 %{_includedir}/libkms
@@ -405,14 +415,14 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %ifarch %{armx} %{riscv}
 %{_includedir}/exynos/
 %{_includedir}/freedreno/
+%endif
+%ifarch %{arm}
 %{_includedir}/omap/
 %endif
 %{_libdir}/libdrm*.so
 %{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
 %{_libdir}/pkgconfig/libkms*.pc
-#{_mandir}/man3/*
-#{_mandir}/man7/*
 
 %if %{with compat32}
 %files -n %{lib32name}
