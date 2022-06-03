@@ -11,9 +11,6 @@
 %define lib32name libdrm%{major}
 %define dev32name libdrm-devel
 
-%define kms_major 1
-%define libkms %mklibname kms %{kms_major}
-%define lib32kms libkms%{kms_major}
 %define intel_major 1
 %define libintel %mklibname drm_intel %{intel_major}
 %define lib32intel libdrm_intel%{intel_major}
@@ -94,13 +91,6 @@ Requires:	%{name}-common
 %description -n %{libname}
 Userspace interface to kernel DRM services.
 
-%package -n %{libkms}
-Summary:	Shared library for KMS
-Group:		System/Libraries
-
-%description -n %{libkms}
-Shared library for kernel mode setting.
-
 %package -n %{libintel}
 Summary:	Shared library for Intel kernel DRM services
 Group:		System/Libraries
@@ -140,13 +130,6 @@ Requires:	%{name}-common
 %description -n %{lib32name}
 Userspace interface to kernel DRM services.
 
-%package -n %{lib32kms}
-Summary:	Shared library for KMS (32-bit)
-Group:		System/Libraries
-
-%description -n %{lib32kms}
-Shared library for kernel mode setting.
-
 %package -n %{lib32intel}
 Summary:	Shared library for Intel kernel DRM services (32-bit)
 Group:		System/Libraries
@@ -180,7 +163,6 @@ Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{devname} = %{version}
 Requires:	%{lib32name} = %{version}
-Requires:	%{lib32kms} = %{version}
 %ifarch %{ix86} %{x86_64}
 Requires:	%{lib32intel} = %{version}
 Requires:	devel(libpciaccess)
@@ -267,7 +249,6 @@ Shared library for Etnaviv kernel Direct Rendering Manager services.
 Summary:	Development files for %{name}
 Group:		Development/X11
 Requires:	%{libname} = %{version}
-Requires:	%{libkms} = %{version}
 %ifarch %{ix86} %{x86_64}
 Requires:	%{libintel} = %{version}
 Requires:	pkgconfig(pciaccess)
@@ -311,7 +292,6 @@ Development files for %{name}.
 	-Dradeon=true \
 	-Damdgpu=true \
 	-Dnouveau=true \
-	-Dlibkms=true \
 	-Dcairo-tests=false
 %endif
 
@@ -341,8 +321,7 @@ Development files for %{name}.
 %endif
 	-Dradeon=true \
 	-Damdgpu=true \
-	-Dnouveau=true \
-	-Dlibkms=true
+	-Dnouveau=true
 
 %build
 %if %{with compat32}
@@ -365,9 +344,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{libname}
 %{_libdir}/libdrm.so.%{major}*
-
-%files -n %{libkms}
-%{_libdir}/libkms.so.%{kms_major}*
 
 %ifarch %{ix86} %{x86_64}
 %files -n %{libintel}
@@ -410,7 +386,6 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{devname}
 %{_includedir}/libdrm
-%{_includedir}/libkms
 %{_includedir}/*.h
 %ifarch %{armx} %{riscv}
 %{_includedir}/exynos/
@@ -420,16 +395,11 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 %{_includedir}/omap/
 %endif
 %{_libdir}/libdrm*.so
-%{_libdir}/libkms.so
 %{_libdir}/pkgconfig/libdrm*.pc
-%{_libdir}/pkgconfig/libkms*.pc
 
 %if %{with compat32}
 %files -n %{lib32name}
 %{_prefix}/lib/libdrm.so.%{major}*
-
-%files -n %{lib32kms}
-%{_prefix}/lib/libkms.so.%{kms_major}*
 
 %files -n %{lib32intel}
 %{_prefix}/lib/libdrm_intel.so.%{intel_major}*
@@ -445,7 +415,5 @@ install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
 
 %files -n %{dev32name}
 %{_prefix}/lib/libdrm*.so
-%{_prefix}/lib/libkms.so
 %{_prefix}/lib/pkgconfig/libdrm*.pc
-%{_prefix}/lib/pkgconfig/libkms*.pc
 %endif
