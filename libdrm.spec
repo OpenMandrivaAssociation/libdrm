@@ -49,7 +49,7 @@
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
 Version:	2.4.111
-Release:	1
+Release:	2
 Group:		System/Libraries
 License:	MIT/X11
 Url:		http://dri.freedesktop.org
@@ -62,7 +62,7 @@ Patch4:		https://src.fedoraproject.org/rpms/libdrm/raw/rawhide/f/libdrm-2.4.0-no
 BuildRequires:	docbook-style-xsl
 BuildRequires:	docbook-dtd42-xml
 BuildRequires:	xsltproc
-BuildRequires:	kernel-release-headers
+BuildRequires:	kernel-headers
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	pkgconfig(atomic_ops)
@@ -71,6 +71,7 @@ BuildRequires:	systemd-rpm-macros
 %if %{with compat32}
 BuildRequires:	devel(libatomic_ops)
 BuildRequires:	devel(libpciaccess)
+BuildRequires:	libc6
 %endif
 
 %description
@@ -335,7 +336,7 @@ Development files for %{name}.
 %endif
 %meson_install
 
-install -m644 %{SOURCE1} -D %{buildroot}/lib/udev/rules.d/91-drm-modeset.rules
+install -m644 %{SOURCE1} -D %{buildroot}%{_udevrulesdir}/91-drm-modeset.rules
 
 %files common
 %dir %{_datadir}/%{name}
