@@ -1,7 +1,7 @@
-diff -up libdrm-2.4.103/xf86drm.c.dma libdrm-2.4.103/xf86drm.c
---- libdrm-2.4.103/xf86drm.c.dma	2020-11-04 13:24:14.000000000 +1000
-+++ libdrm-2.4.103/xf86drm.c	2020-11-04 13:42:04.190975193 +1000
-@@ -507,11 +507,6 @@ drm_public int drmAvailable(void)
+diff -Naur libdrm-2.4.113/xf86drm.c libdrm-2.4.113.tpg/xf86drm.c
+--- libdrm-2.4.113/xf86drm.c	2022-08-31 14:38:38.000000000 +0000
++++ libdrm-2.4.113.tpg/xf86drm.c	2022-09-02 14:29:19.924545385 +0000
+@@ -930,11 +930,6 @@
      int           fd;
  
      if ((fd = drmOpenMinor(0, 1, DRM_NODE_PRIMARY)) < 0) {
@@ -13,7 +13,7 @@ diff -up libdrm-2.4.103/xf86drm.c.dma libdrm-2.4.103/xf86drm.c
          return 0;
      }
  
-@@ -704,38 +699,6 @@ static int drmOpenByName(const char *nam
+@@ -1127,38 +1122,6 @@
          }
      }
  
@@ -25,7 +25,7 @@ diff -up libdrm-2.4.103/xf86drm.c.dma libdrm-2.4.103/xf86drm.c
 -        int  retcode;
 -
 -        sprintf(proc_name, "/proc/dri/%d/name", i);
--        if ((fd = open(proc_name, O_RDONLY, 0)) >= 0) {
+-        if ((fd = open(proc_name, O_RDONLY)) >= 0) {
 -            retcode = read(fd, buf, sizeof(buf)-1);
 -            close(fd);
 -            if (retcode) {

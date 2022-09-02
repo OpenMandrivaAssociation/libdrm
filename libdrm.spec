@@ -48,7 +48,7 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.112
+Version:	2.4.113
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
@@ -58,10 +58,6 @@ Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		https://src.fedoraproject.org/rpms/libdrm/raw/rawhide/f/libdrm-make-dri-perms-okay.patch
 Patch4:		https://src.fedoraproject.org/rpms/libdrm/raw/rawhide/f/libdrm-2.4.0-no-bc.patch
-# For building man pages
-BuildRequires:	docbook-style-xsl
-BuildRequires:	docbook-dtd42-xml
-BuildRequires:	xsltproc
 BuildRequires:	kernel-headers
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
@@ -280,49 +276,58 @@ Development files for %{name}.
 %if %{with compat32}
 %meson32 \
 %ifarch %{ix86} %{x86_64}
-	-Dintel=true \
+	-Dintel=enabled \
 %else
-	-Dintel=false \
+	-Dintel=disabled \
 %endif
-	-Domap=false \
-	-Dexynos=false \
-	-Dfreedreno=false \
-	-Dtegra=false \
-	-Detnaviv=false \
-	-Dvc4=false \
-	-Dradeon=true \
-	-Damdgpu=true \
-	-Dnouveau=true \
-	-Dcairo-tests=false
+	-Domap=disabled \
+	-Dexynos=disabled \
+	-Dfreedreno=disabled \
+	-Dtegra=disabled \
+	-Detnaviv=disabled \
+	-Dvc4=disabled \
+	-Dradeon=enabled \
+	-Damdgpu=enabled \
+	-Dnouveau=enabled \
+	-Dcairo-tests=disabled \
+	-Dvalgrind=disabled \
+	-Dtests=false \
+	-Dman-pages=disabled
 %endif
 
 %meson \
 %ifarch %{ix86} %{x86_64}
-	-Dintel=true \
+	-Dintel=enabled \
 %else
-	-Dintel=false \
+	-Dintel=disabled \
 %endif
 %ifarch %{armx} %{riscv}
-	-Dexynos=true \
-	-Dfreedreno=true \
-	-Dtegra=true \
-	-Detnaviv=true \
-	-Dvc4=true \
+	-Dexynos=enabled \
+	-Dfreedreno=enabled \
+	-Dtegra=enabled \
+	-Detnaviv=enabled \
+	-Dvc4=enabled \
 %else
-	-Dexynos=false \
-	-Dfreedreno=false \
-	-Dtegra=false \
-	-Detnaviv=false \
-	-Dvc4=false \
+	-Dexynos=disabled \
+	-Dfreedreno=disabled \
+	-Dtegra=disabled \
+	-Detnaviv=disabled \
+	-Dvc4=disabled \
 %endif
 %ifarch %{arm}
-	-Domap=true \
+	-Domap=enabled \
 %else
-	-Domap=false \
+	-Domap=disabled \
 %endif
-	-Dradeon=true \
-	-Damdgpu=true \
-	-Dnouveau=true
+	-Dradeon=enabled \
+	-Damdgpu=enabled \
+	-Dnouveau=enabled \
+	-Dcairo-tests=disabled \
+	-Dvalgrind=disabled \
+	-Dtests=false \
+	-Dudev=true \
+	-Dman-pages=disabled
+
 
 %build
 %if %{with compat32}
