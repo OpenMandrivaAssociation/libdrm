@@ -48,12 +48,12 @@
 
 Summary:	Userspace interface to kernel DRM services
 Name:		libdrm
-Version:	2.4.119
+Version:	2.4.120
 Release:	1
 Group:		System/Libraries
 License:	MIT/X11
-Url:		http://dri.freedesktop.org
-Source0:	http://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.xz
+Url:		https://dri.freedesktop.org
+Source0:	https://dri.freedesktop.org/libdrm/libdrm-%{version}.tar.xz
 Source1:	91-drm-modeset.rules
 # hardcode the 666 instead of 660 for device nodes
 Patch3:		https://src.fedoraproject.org/rpms/libdrm/raw/rawhide/f/libdrm-make-dri-perms-okay.patch
