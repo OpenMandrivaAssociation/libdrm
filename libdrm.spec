@@ -62,11 +62,13 @@ BuildRequires:	kernel-headers
 BuildRequires:	pkgconfig(pciaccess)
 BuildRequires:	pkgconfig(xorg-macros)
 BuildRequires:	pkgconfig(atomic_ops)
+BuildRequires:	pkgconfig(zlib)
 BuildRequires:	meson
 BuildRequires:	systemd-rpm-macros
 %if %{with compat32}
 BuildRequires:	devel(libatomic_ops)
 BuildRequires:	devel(libpciaccess)
+BuildRequires:	devel(libz)
 BuildRequires:	libc6
 %endif
 
